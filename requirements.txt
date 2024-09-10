@@ -17,3 +17,4 @@ azure-storage-blob
 tqdm
 databricks-sql-connector
 matplotlib
+plotly
