@@ -203,3 +203,5 @@ train_dataset, valid_dataset, test_dataset = tsp.get_datasets(
 )
 #print(f"Data lengths: train = {len(train_dataset)}, val = {len(valid_dataset)}, test = {len(test_dataset)}")
 
+zeroshot_model = TinyTimeMixerForPrediction.from_pretrained("ibm/TTM", revision=TTM_MODEL_REVISION)
+zeroshot_model
