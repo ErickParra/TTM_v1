@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from transformers import TinyTimeMixerForPrediction
+#from transformers import TinyTimeMixerForPrediction
 from datetime import datetime, timedelta
 from databricks import sql
 import matplotlib.pyplot as plt
