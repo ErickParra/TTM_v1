@@ -163,22 +163,23 @@ preprocessor = TimeSeriesPreprocessor(
 
 
 
-# Llamar a la función para cargar el modelo
-#model = load_model()
+# Define la URL base donde se encuentran los archivos en GitHub
 base_url = 'https://raw.githubusercontent.com/ErickParra/TTM_v1/main/'
 
-model = TinyTimeMixerForPrediction.from_pretrained(base_url, revision=TTM_MODEL_REVISION, head_dropout=0.0,dropout=0.0,loss="mse")
+# Especifique la URL completa para el archivo de configuración y los pesos del modelo
+config_url = f"{base_url}config.json"
+model_url = f"{base_url}model.safetensors"
 
-
-# Escalar los datos
-df_scaled = preprocessor.transform(df_cleaned)
-
-# Streamlit UI para mostrar el título
-st.title("Predicción de Temperatura de Aceite Hidráulico (TTM)")
-
-# Mostrar datos preprocesados
-st.write("Datos preprocesados para predicciones:")
-st.write(df_scaled.head())
+# Cargar el modelo usando TinyTimeMixerForPrediction.from_pretrained
+model = TinyTimeMixerForPrediction.from_pretrained(
+    pretrained_model_name_or_path=base_url,  # Base URL para buscar archivos
+    revision=TTM_MODEL_REVISION,             # Revisión del modelo, asegúrate de que está correctamente definido
+    config=config_url,                       # URL del archivo de configuración JSON
+    safetensors=model_url,                   # URL del archivo de pesos del modelo
+    head_dropout=0.0,
+    dropout=0.0,
+    loss="mse"
+)
 
 # # Cargar el modelo finetuneado
 # model = load_model()
