@@ -108,13 +108,14 @@ if not pd.api.types.is_datetime64_any_dtype(df_pivot['ReadTime']):
 if df_pivot.index.name != 'ReadTime':
     df_pivot.set_index('ReadTime', inplace=True)
 
-# Ahora intenta interpolar
-df_pivot.interpolate(method='time', inplace=True)
+# Establecer 'ReadTime' como el índice
+df_pivot['ReadTime'] = pd.to_datetime(df_pivot['ReadTime'])
+df_pivot.set_index('ReadTime', inplace=True)
 
-df_resampled = df_pivot.resample('1T', on='ReadTime').mean()  # Resampling a intervalos de 1 minuto
-#df_resampled.fillna(method='bfill', inplace=True)  # Rellenar valores faltantes hacia atrás
+# Resamplear y manejar valores faltantes
+df_resampled = df_pivot.resample('1T').mean()
+df_resampled.interpolate(method='time', inplace=True)
 
-# Obtener datos en tiempo real desde Databricks y preprocesarlos
-#df_cleaned = get_data_from_databricks()
-st.write("Datos Resampleados:")
-st.write(df_resampled)  # Esta línea mostrará el dataframe en la aplicación Streamlit
+# Mostrar los datos
+st.write("Datos resampleados e interpolados:")
+st.write(df_resampled)
