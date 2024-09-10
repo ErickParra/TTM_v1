@@ -1,4 +1,5 @@
 streamlit
+git+https://github.com/IBM/tsfm.git@main#egg=tsfm_public
 pandas==2.2.2
 numpy
 scikit-learn
@@ -12,7 +13,6 @@ pyarrow==17.0.0
 dill==0.3.8
 xxhash==3.5.0
 multiprocess==0.70.16
-git+https://github.com/IBM/tsfm.git@main#egg=tsfm_public
 azure-storage-blob
 tqdm
 databricks-sql-connector
