@@ -18,3 +18,4 @@ tqdm
 databricks-sql-connector
 matplotlib
 plotly
+IPython
