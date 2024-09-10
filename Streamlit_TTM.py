@@ -117,4 +117,4 @@ df_pivot.interpolate(method='time', inplace=True)
 # Obtener datos en tiempo real desde Databricks y preprocesarlos
 #df_cleaned = get_data_from_databricks()
 st.write("Datos Resampleados:")
-st.write(df_resampled)  # Esta línea mostrará el dataframe en la aplicación Streamlit
+st.write(df_pivot)  # Esta línea mostrará el dataframe en la aplicación Streamlit
