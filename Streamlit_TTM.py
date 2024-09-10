@@ -11,6 +11,8 @@ import pandas as pd
 from datetime import datetime, timedelta
 from databricks import sql
 
+from tsfm_public.toolkit.time_series_preprocessor import TimeSeriesPreprocessor
+
 # Acceder a los secrets almacenados en Streamlit Cloud
 server = st.secrets["server"]
 http = st.secrets["http"]
@@ -120,3 +122,32 @@ df_cleaned = df_resampled.drop(columns=[
 
 st.write("Datos Limpiado:")
 st.write(df_cleaned)
+
+TTM_MODEL_REVISION = "1024_96_v1"
+
+context_length = 1024
+forecast_length = 96
+fewshot_fraction = 1
+
+
+timestamp_column = "ReadTime"
+id_columns = []
+target_columns = [col for col in df_cleaned.columns if col != 'ReadTime']
+
+column_specifiers = {
+    "timestamp_column": timestamp_column,
+    "id_columns": id_columns,
+    "target_columns": target_columns,
+    "control_columns": [],
+}
+
+
+# Inicialización del preprocesador
+preprocessor = TimeSeriesPreprocessor(
+    **column_specifiers,
+    context_length=context_length,
+    prediction_length=forecast_length,
+    scaling=True,  # Habilitar la normalización
+    encode_categorical=False,
+    scaler_type="standard"  # Tipo de escalador
+)
