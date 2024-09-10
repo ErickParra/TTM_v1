@@ -172,6 +172,9 @@ model = TinyTimeMixerForPrediction.from_pretrained(
     loss="mse"
 )
 
+st.write("Model Fine-Tunning:")
+st.write(model)
+
 # # Cargar el modelo finetuneado
 # model = load_model()
 
