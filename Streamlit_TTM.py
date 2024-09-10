@@ -161,6 +161,8 @@ preprocessor = TimeSeriesPreprocessor(
     scaler_type="standard"  # Tipo de escalador
 )
 
+# Aplicar preprocesador a los datos limpios
+df_scaled = preprocessor.transform(df_cleaned)
 
 
 # Cargar el modelo usando TinyTimeMixerForPrediction.from_pretrained
@@ -174,6 +176,12 @@ model = TinyTimeMixerForPrediction.from_pretrained(
 
 st.write("Model Fine-Tunning:")
 st.write(model)
+
+
+st.write("Model Fine-Tunning:")
+st.write(df_scaled)
+
+
 
 # # Cargar el modelo finetuneado
 # model = load_model()
