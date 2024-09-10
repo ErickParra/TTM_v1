@@ -224,8 +224,8 @@ finetune_forecast_trainer_new = Trainer(
 
 
 
-plot_predictions(model= finetune_forecast_trainer_new.model, dset=df_cleaned, plot_dir="plot_dir", plot_prefix="test_finetunning", channel=8)
-
+plot_predictions(model= model, dset=df_cleaned, plot_dir="plot_dir", plot_prefix="test_finetunning", channel=8)
+st.write(plot_predictions(model= model, dset=df_cleaned, plot_dir="plot_dir", plot_prefix="test_finetunning", channel=8))
 
 #predictions = finetune_forecast_trainer_new.predict(df_cleaned)
 
