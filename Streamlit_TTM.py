@@ -163,40 +163,6 @@ preprocessor = TimeSeriesPreprocessor(
 
 
 
-@st.cache(allow_output_mutation=True)
-def load_model():
-    # Definir las URLs de los archivos raw en GitHub
-    config_url = 'https://raw.githubusercontent.com/ErickParra/TTM_v1/main/config.json'
-    model_url = 'https://raw.githubusercontent.com/ErickParra/TTM_v1/main/model.safetensors'
-    base_url = 'https://raw.githubusercontent.com/ErickParra/TTM_v1/main/'
-    #base_url = 'https://github.com/ErickParra/TTM_v1/tree/main'
-    
-    # Crear directorio temporal para almacenar los archivos
-    temp_dir = 'tmp_model'
-    if not os.path.exists(temp_dir):
-        os.makedirs(temp_dir)
-    
-    # Descargar y guardar el archivo de configuración
-    config_path = os.path.join(base_url, 'config.json')
-    response = requests.get(config_url)
-    with open(config_path, 'wb') as f:
-        f.write(response.content)
-    
-    # Descargar y guardar el archivo de pesos del modelo
-    model_path = os.path.join(base_url, 'model.safetensors')
-    response = requests.get(model_url)
-    with open(model_path, 'wb') as f:
-        f.write(response.content)
-    
-    # Cargar el modelo usando las rutas locales
-    #from transformers import TinyTimeMixerForPrediction
-    #model = TinyTimeMixerForPrediction.from_pretrained(temp_dir, 
-    #                                                   config=config_path, 
-    #                                                   safetensors=model_path)
-    model = TinyTimeMixerForPrediction.from_pretrained(base_url, revision=TTM_MODEL_REVISION, head_dropout=0.0,dropout=0.0,loss="mse")
-
-    return model
-
 # Llamar a la función para cargar el modelo
 #model = load_model()
 base_url = 'https://raw.githubusercontent.com/ErickParra/TTM_v1/main/'
