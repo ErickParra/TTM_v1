@@ -210,7 +210,7 @@ st.write(zeroshot_model)
 
 
 
-"temp_dir = tempfile.mkdtemp()
+#temp_dir = tempfile.mkdtemp()
 
 zeroshot_trainer = Trainer(
     model=zeroshot_model,
