@@ -100,7 +100,17 @@ columns_to_numeric = [
 df_pivot[columns_to_numeric] = df_pivot[columns_to_numeric].apply(pd.to_numeric, errors='coerce')
 
 # Manejo de valores faltantes (Interpolación por tiempo y resampling)
+# Convertir 'ReadTime' a datetime si aún no lo está
+if not pd.api.types.is_datetime64_any_dtype(df_pivot['ReadTime']):
+    df_pivot['ReadTime'] = pd.to_datetime(df_pivot['ReadTime'])
+
+# Establecer 'ReadTime' como el índice si aún no lo es
+if df_pivot.index.name != 'ReadTime':
+    df_pivot.set_index('ReadTime', inplace=True)
+
+# Ahora intenta interpolar
 df_pivot.interpolate(method='time', inplace=True)
+
 #df_resampled = df_pivot.resample('1T', on='ReadTime').mean()  # Resampling a intervalos de 1 minuto
 #df_resampled.fillna(method='bfill', inplace=True)  # Rellenar valores faltantes hacia atrás
 
