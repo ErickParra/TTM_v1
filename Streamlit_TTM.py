@@ -4,7 +4,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 from databricks import sql
 import matplotlib.pyplot as plt
-#from tsfm_public.toolkit.visualization import plot_predictions
+from tsfm_public.toolkit.visualization import plot_predictions
 import requests
 import os
 from transformers import EarlyStoppingCallback, Trainer, TrainingArguments, set_seed
