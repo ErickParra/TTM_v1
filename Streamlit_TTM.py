@@ -56,10 +56,21 @@ df_filtered = df.drop(columns=[
     ])
 
 
-
-
-
 # Obtener datos en tiempo real desde Databricks y preprocesarlos
 #df_cleaned = get_data_from_databricks()
 st.write("Datos Drop Columnas 1:")
 st.write(df_filtered)  # Esta línea mostrará el dataframe en la aplicación Streamlit
+
+
+# Reordenar columnas
+df_filtered = df_filtered[["ReadTime", "ParameterName", "ParameterFloatValue", "EquipmentName", "EquipmentModel"]]
+
+# Pivotear el dataframe
+df_pivot = df_filtered.pivot_table(index=["ReadTime", "EquipmentName", "EquipmentModel"], 
+                                       columns="ParameterName", values="ParameterFloatValue", aggfunc="max").reset_index()
+
+
+# Obtener datos en tiempo real desde Databricks y preprocesarlos
+#df_cleaned = get_data_from_databricks()
+st.write("Datos Pivoteados:")
+st.write(df_pivot)  # Esta línea mostrará el dataframe en la aplicación Streamlit
