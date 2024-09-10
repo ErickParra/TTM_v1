@@ -16,3 +16,4 @@ multiprocess==0.70.16
 azure-storage-blob
 tqdm
 databricks-sql-connector
+matplotlib
