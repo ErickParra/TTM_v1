@@ -38,8 +38,23 @@ def get_data_from_databricks():
     df = pd.read_sql(query, connection)
     return df
 
+df = get_data_from_databricks()
+
+#Remover columnas no necesarias
+df_filtered = df.drop(columns=[
+        "Location", "NextAction", "NextActionTime", "LastAction", "LastActionTime", 
+        "LoadedMaterial", "OperatorId", "CustomerName", "ParameterNumber", "ParameterID", 
+        "ParameterRequestID", "EquipmentId", "EquipmentGroup", "EquipmentType", 
+        "EquipmentManufacturer", "ParameterStringValue", "InterfaceModelName", 
+        "PositionReadTime", "X", "Y", "Z", "Heading", "Hdop", "Vdop", "Date_ReadTime", 
+        "InterfaceName"
+    ])
+
+
+
+
 
 # Obtener datos en tiempo real desde Databricks y preprocesarlos
-df_cleaned = get_data_from_databricks()
+#df_cleaned = get_data_from_databricks()
 st.write("Datos limpios y procesados:")
-st.write(df_cleaned)  # Esta línea mostrará el dataframe en la aplicación Streamlit
+st.write(df_filtered)  # Esta línea mostrará el dataframe en la aplicación Streamlit
