@@ -95,6 +95,7 @@ df_pivot.index = pd.to_datetime(df_pivot.index)
 # Resamplear y manejar valores faltantes
 df_resampled = df_pivot.resample('1T').mean()
 df_resampled.interpolate(method='time', inplace=True)
+df_resampled.fillna(method='bfill', inplace=True)  # Rellenar valores faltantes hacia atrás
 
 st.write("Datos Resampleados e interpolados:")
 st.write(df_resampled)
