@@ -182,20 +182,24 @@ st.write("Data Normalizada:")
 st.write(df_cleaned)
 
 
-finetune_forecast_args = TrainingArguments(
-    output_dir="output",
-    overwrite_output_dir=True
-)
+# finetune_forecast_args = TrainingArguments(
+#     output_dir="output",
+#     overwrite_output_dir=True
+# )
 
-finetune_forecast_trainer_new = Trainer(
-    model=model,
-    args=finetune_forecast_args
-)
+# finetune_forecast_trainer_new = Trainer(
+#     model=model,
+#     args=finetune_forecast_args
+# )
 
-predictions = finetune_forecast_trainer_new.predict(df_cleaned)
+# predictions = finetune_forecast_trainer_new.predict(df_cleaned)
 
-st.write("Predictions 1:")
-st.write(predictions)
+# st.write("Predictions 1:")
+# st.write(predictions)
+
+
+
+
 
 # # Cargar el modelo finetuneado
 # model = load_model()
