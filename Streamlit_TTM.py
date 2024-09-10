@@ -244,13 +244,10 @@ zeroshot_trainer.evaluate(valid_dataset)
 #st.write(plot_predictions(model= zeroshot_trainer.model, dset=test_dataset, plot_dir="output", plot_prefix="test_zeroshot", channel=8))
 
 
-import streamlit as st
-import pandas as pd
-import torch
-import matplotlib.pyplot as plt
+
 
 # Supongamos que 'test_dataset' y 'predictions_test' están definidos correctamente.
-window = 150
+window = 96
 
 # Creación de DataFrames de pandas a partir de tensores de PyTorch
 observed_df = pd.DataFrame(torch.cat([test_dataset[window]['past_values'], test_dataset[window]['future_values']]))
