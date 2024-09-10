@@ -162,7 +162,7 @@ preprocessor = TimeSeriesPreprocessor(
 )
 
 # Aplicar preprocesador a los datos limpios
-df_scaled = preprocessor.transform(df_cleaned)
+df_scaled = preprocessor.get_datasets(df_cleaned)
 
 
 # Cargar el modelo usando TinyTimeMixerForPrediction.from_pretrained
@@ -178,7 +178,7 @@ st.write("Model Fine-Tunning:")
 st.write(model)
 
 
-st.write("Model Fine-Tunning:")
+st.write("Data Normalizada:")
 st.write(df_scaled)
 
 
