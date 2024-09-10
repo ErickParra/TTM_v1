@@ -275,29 +275,37 @@ zeroshot_trainer.evaluate(valid_dataset)
 # st.pyplot(fig)
 
 
-import matplotlib.pyplot as plt
-import streamlit as st
+import torch
 
-# Supongamos que estas son tus series de tiempo de valores reales y predichos
-# Asegúrate de reemplazar esto con cómo realmente accedes a tus datos
-real_values = test_dataset['target_column']  # Asegúrate de que 'target_column' sea el nombre correcto
-predicted_values = predictions_test[0]  # Asume que este es el formato de tus predicciones
+# Función para extraer datos del dataset
+def extract_data(dataset, index=None):
+    loader = DataLoader(dataset, batch_size=1, shuffle=False)
+    real_data = []
+    for batch in loader:
+        inputs, targets = batch
+        real_data.append(targets.numpy())
+    return np.array(real_data).flatten()
 
-# Crear un DataFrame para facilitar el plot
-df_plot = pd.DataFrame({
-    'Real': real_values,
-    'Predicted': predicted_values
-})
+# Extracción de valores reales
+real_values = extract_data(test_dataset)
 
-# Crear el plot
+# Asumiendo que 'predictions_test' es una tupla que viene del Trainer de Hugging Face y contiene las predicciones
+predicted_values = predictions_test[0].squeeze()  # Ajusta según la estructura de tus datos
+
+# Asegurándose que los arrays tengan el mismo tamaño
+min_length = min(len(real_values), len(predicted_values))
+real_values = real_values[:min_length]
+predicted_values = predicted_values[:min_length]
+
+# Plot usando Matplotlib
 plt.figure(figsize=(10, 5))
-plt.plot(df_plot['Real'], label='Real Values')
-plt.plot(df_plot['Predicted'], label='Predictions', linestyle='--')
-plt.title('Comparison of Real and Predicted Values')
-plt.xlabel('Time')
+plt.plot(real_values, label='Real Values')
+plt.plot(predicted_values, label='Predictions', linestyle='--')
+plt.title('Real vs Predicted Values')
+plt.xlabel('Sample Index')
 plt.ylabel('Value')
 plt.legend()
 plt.grid(True)
 
-# Mostrar el plot en Streamlit
+# Mostrar en Streamlit
 st.pyplot(plt)
