@@ -166,7 +166,8 @@ def load_model():
     # Definir las URLs de los archivos raw en GitHub
     config_url = 'https://raw.githubusercontent.com/ErickParra/TTM_v1/main/config.json'
     model_url = 'https://raw.githubusercontent.com/ErickParra/TTM_v1/main/model.safetensors'
-    base_url = 'https://github.com/ErickParra/TTM_v1/tree/main'
+    base_url = 'https://raw.githubusercontent.com/ErickParra/TTM_v1/main/'
+    #base_url = 'https://github.com/ErickParra/TTM_v1/tree/main'
     
     # Crear directorio temporal para almacenar los archivos
     temp_dir = 'tmp_model'
