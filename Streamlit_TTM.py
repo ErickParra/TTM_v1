@@ -15,7 +15,7 @@ from tsfm_public.toolkit.time_series_preprocessor import TimeSeriesPreprocessor
 
 from tsfm_public import TinyTimeMixerForPrediction, TrackingCallback, count_parameters, load_dataset
 
-from tsfm_public.models.tinytimemixer.utils import visualization
+from tsfm_public.toolkit.visualization import plot_predictions
 
 # Acceder a los secrets almacenados en Streamlit Cloud
 server = st.secrets["server"]
