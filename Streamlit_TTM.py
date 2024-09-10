@@ -230,7 +230,11 @@ torch.cuda.empty_cache()  # Libera memoria antes de la segunda predicción
 predictions_validation = zeroshot_trainer.predict(valid_dataset)
 
 predictions_test[0][0].shape
+st.write(predictions_test[0][0].shape)
 
 zeroshot_trainer.evaluate(valid_dataset)
 
+
+
 plot_predictions(model= zeroshot_trainer.model, dset=test_dataset, plot_dir="output", plot_prefix="test_zeroshot", channel=8)
+st.write(plot_predictions(model= zeroshot_trainer.model, dset=test_dataset, plot_dir="output", plot_prefix="test_zeroshot", channel=8))
