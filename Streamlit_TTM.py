@@ -161,6 +161,27 @@ preprocessor = TimeSeriesPreprocessor(
     scaler_type="standard"  # Tipo de escalador
 )
 
+
+# Asumiendo que has definido column_specifiers y otros parámetros correctamente
+preprocessor = TimeSeriesPreprocessor(
+    timestamp_column="ReadTime",
+    id_columns=[],  # Asegúrate de que esta configuración es correcta. Si tienes columnas de ID, debes incluirlas.
+    target_columns=[col for col in df_cleaned.columns if col != 'ReadTime'],
+    control_columns=[],  # Incluye aquí cualquier columna de control si la tienes
+    context_length=1024,
+    prediction_length=96,
+    scaling=True,
+    encode_categorical=False,
+    scaler_type="standard"
+)
+
+# Verificar estructura de datos y aplicar preprocesador
+if hasattr(preprocessor, 'transform'):
+    df_scaled = preprocessor.transform(df_cleaned)
+else:
+    print("El preprocesador no tiene el método 'transform'. Revisa la implementación.")
+
+
 # Aplicar preprocesador a los datos limpios
 #df_scaled = preprocessor.get_datasets(df_cleaned)
 
@@ -179,7 +200,7 @@ st.write(model)
 
 
 st.write("Data Normalizada:")
-st.write(df_cleaned)
+st.write(df_scaled)
 
 
 finetune_forecast_args = TrainingArguments(
@@ -193,10 +214,10 @@ finetune_forecast_trainer_new = Trainer(
 )
 
 
-predictions = finetune_forecast_trainer_new.predict(df_cleaned)
+#predictions = finetune_forecast_trainer_new.predict(df_cleaned)
 
-st.write("Predictions 1:")
-st.write(predictions)
+#st.write("Predictions 1:")
+#st.write(predictions)
 
 
 
