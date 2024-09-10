@@ -40,6 +40,11 @@ def get_data_from_databricks():
 
 df = get_data_from_databricks()
 
+# Obtener datos en tiempo real desde Databricks y preprocesarlos
+#df_cleaned = get_data_from_databricks()
+st.write("Datos Databricks:")
+st.write(df)  # Esta línea mostrará el dataframe en la aplicación Streamlit
+
 #Remover columnas no necesarias
 df_filtered = df.drop(columns=[
         "Location", "NextAction", "NextActionTime", "LastAction", "LastActionTime", 
@@ -56,5 +61,5 @@ df_filtered = df.drop(columns=[
 
 # Obtener datos en tiempo real desde Databricks y preprocesarlos
 #df_cleaned = get_data_from_databricks()
-st.write("Datos limpios y procesados:")
+st.write("Datos Drop Columnas 1:")
 st.write(df_filtered)  # Esta línea mostrará el dataframe en la aplicación Streamlit
