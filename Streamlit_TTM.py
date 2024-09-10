@@ -253,6 +253,17 @@ dataset = CustomDataset(df_cleaned, features_columns, target_column)
 st.write("Objeto Dataset:")
 st.write(dataset)
 
+from torch.utils.data import DataLoader
+
+# Crear DataLoader para el entrenamiento
+data_loader = DataLoader(dataset, batch_size=32, shuffle=True)  # Ajusta el batch_size según lo necesario
+st.write("Crear DataLoader:")
+st.write(data_loader)
+
+
+
+
+
 #plot_predictions(model= model, dset=df_cleaned, plot_dir="plot_dir", plot_prefix="test_finetunning", channel=8)
 #st.write(plot_predictions(model= model, dset=df_cleaned, plot_dir="plot_dir", plot_prefix="test_finetunning", channel=8))
 
