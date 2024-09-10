@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 #from tsfm_public.toolkit.visualization import plot_predictions
 import requests
 import os
-
+from transformers import EarlyStoppingCallback, Trainer, TrainingArguments, set_seed
 
 import streamlit as st
 import pandas as pd
@@ -178,23 +178,23 @@ st.write(model)
 # # Cargar el modelo finetuneado
 # model = load_model()
 
-# # Hacer predicción con los datos escalados
-# predictions = model.predict(df_scaled)  # Asegúrate de que el método 'predict' esté correctamente especificado
-# st.write("Predicciones:")
-# st.write(predictions)
+# # # Hacer predicción con los datos escalados
+#  predictions = model.predict(df_scaled)  # Asegúrate de que el método 'predict' esté correctamente especificado
+#  st.write("Predicciones:")
+#  st.write(predictions)
 
-# # Visualizar resultados
-# def plot_results(predictions, df_scaled):
-#     fig, ax = plt.subplots(figsize=(10, 5))
-#     ax.plot(df_scaled.index, df_scaled[target_columns[0]], label='Real')  # Ajusta 'target_columns[0]' según tu columna objetivo
-#     ax.plot(df_scaled.index, predictions, label='Predicción', linestyle='--')
-#     ax.set_title("Comparación de Temperatura Real vs. Predicha")
-#     ax.set_xlabel("Tiempo")
-#     ax.set_ylabel("Temperatura")
-#     ax.legend()
-#     return fig
+# # # Visualizar resultados
+#  def plot_results(predictions, df_scaled):
+#      fig, ax = plt.subplots(figsize=(10, 5))
+#      ax.plot(df_scaled.index, df_scaled[target_columns[0]], label='Real')  # Ajusta 'target_columns[0]' según tu columna objetivo
+#      ax.plot(df_scaled.index, predictions, label='Predicción', linestyle='--')
+#      ax.set_title("Comparación de Temperatura Real vs. Predicha")
+#      ax.set_xlabel("Tiempo")
+#      ax.set_ylabel("Temperatura")
+#      ax.legend()
+#      return fig
 
-# # Botón en Streamlit para visualizar las predicciones
-# if st.button("Ver Predicciones vs Real"):
-#     fig = plot_results(predictions, df_scaled)
-#     st.pyplot(fig)
+# # # Botón en Streamlit para visualizar las predicciones
+#  if st.button("Ver Predicciones vs Real"):
+#      fig = plot_results(predictions, df_scaled)
+#      st.pyplot(fig)
