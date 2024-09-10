@@ -210,12 +210,12 @@ st.write(zeroshot_model)
 
 
 
-temp_dir = tempfile.mkdtemp()
+"temp_dir = tempfile.mkdtemp()
 
 zeroshot_trainer = Trainer(
     model=zeroshot_model,
     args=TrainingArguments(
-        output_dir=temp_dir,
+        output_dir="output",
         per_device_eval_batch_size=2,
         eval_accumulation_steps=10,
     )
@@ -233,4 +233,4 @@ predictions_test[0][0].shape
 
 zeroshot_trainer.evaluate(valid_dataset)
 
-plot_predictions(model= zeroshot_trainer.model, dset=test_dataset, plot_dir=os.path.join(OUT_DIR, "ettm2"), plot_prefix="test_zeroshot", channel=8)
+plot_predictions(model= zeroshot_trainer.model, dset=test_dataset, plot_dir="output", plot_prefix="test_zeroshot", channel=8)
