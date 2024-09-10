@@ -283,10 +283,10 @@ finetune_forecast_trainer_new = Trainer(
     train_dataset=dataset,  # Usa tu dataset
 )
 
-# Realizar predicciones
-predictions = finetune_forecast_trainer_new.predict(data_loader)
-st.write("Predicciones:")
-st.write(predictions)
+# # Realizar predicciones
+# predictions = finetune_forecast_trainer_new.predict(data_loader)
+# st.write("Predicciones:")
+# st.write(predictions)
 
 
 #plot_predictions(model= model, dset=df_cleaned, plot_dir="plot_dir", plot_prefix="test_finetunning", channel=8)
