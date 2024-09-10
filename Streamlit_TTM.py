@@ -220,12 +220,12 @@ finetune_forecast_trainer_new = Trainer(
 
 
 
+predictions_test_new = finetune_forecast_trainer_new.predict(df_cleaned)
+st.write(plot_predictions(predictions_test_new))
 
 
-
-
-plot_predictions(model= model, dset=df_cleaned, plot_dir="plot_dir", plot_prefix="test_finetunning", channel=8)
-st.write(plot_predictions(model= model, dset=df_cleaned, plot_dir="plot_dir", plot_prefix="test_finetunning", channel=8))
+#plot_predictions(model= model, dset=df_cleaned, plot_dir="plot_dir", plot_prefix="test_finetunning", channel=8)
+#st.write(plot_predictions(model= model, dset=df_cleaned, plot_dir="plot_dir", plot_prefix="test_finetunning", channel=8))
 
 #predictions = finetune_forecast_trainer_new.predict(df_cleaned)
 
