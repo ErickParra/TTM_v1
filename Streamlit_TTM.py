@@ -74,3 +74,37 @@ df_pivot = df_filtered.pivot_table(index=["ReadTime", "EquipmentName", "Equipmen
 #df_cleaned = get_data_from_databricks()
 st.write("Datos Pivoteados:")
 st.write(df_pivot)  # Esta línea mostrará el dataframe en la aplicación Streamlit
+
+
+
+# Convertir columnas a sus tipos adecuados
+columns_to_numeric = [
+        'Engine Oil Temperature (Engine2) (PC5500)', 'Remote Oil Tank Level (Pressure/Engine2) (PC5500)',
+        'Engine Crankcase Pressure (Cense-QSK38)', 'Engine Coolant Pressure (Cense-QSK38)',
+        'Intake Manifold 2 Temperature - Parent (Cense-QSK38)', 'Fuel Temperature (Engine1) (PC5500)',
+        'Grease Barrel Level (CLS1 Central) (PC5500)', 'Transmission Oil Temperature (Transmission1) (PC5500)',
+        'Turbocharger 2 Boost Pressure (Cense-QSK38)', 'Engine Oil Pressure (Cense-QSK38)',
+        'Engine Intake Manifold 1 Temperature (Cense-QSK38)', 'Engine Coolant Temperature (Cense-QSK38)',
+        'Remote Oil Tank Level (Pressure/Engine1) (PC5500)', 'Turbocharger 1 Boost Pressure (Cense-QSK38)',
+        'Engine Percent Load At Current Speed (Cense-QSK38)', 'Ambient Temperature (PC5500)',
+        'Engine Oil Temperature (Engine1) (PC5500)', 'Hydraulic Oil Temperature (PC5500)',
+        'Coolant Level (Engine1) (PC5500)', 'Hydraulic Oil Tank Level (Pressure) (PC5500)',
+        'Lubrication Cycle Counter SLS (PC5500)', 'Engine Speed (Cense-QSK38)',
+        'Engine 2 Oil Level (PC5500)', 'Engine 2 Fuel Temperature (PC5500)', 'Coolant Temperature (Engine2) (PC5500)',
+        'Engine Oil Temperature 1 - Parent (Cense-QSK38)', 'Air Intake Manifold Temperature (Engine2) (PC5500)',
+        'Grease Barrel Level (CLS2 Attachment) (PC5500)', 'Hydraulic Oil Level (Pressure) (PC5500)',
+        'Fuel Level (Pressure) (PC5500)', 'Grease Barrel Level (SLS) (PC5500)', 'Coolant Temperature (Engine1) (PC5500)',
+        'Coolant Level (Engine2) (PC5500)', 'Water In Fuel Indicator (Cense-QSK38)', 'Total Vehicle Hours (PC5500)'
+    ]
+
+df_pivot[columns_to_numeric] = df_pivot[columns_to_numeric].apply(pd.to_numeric, errors='coerce')
+
+# Manejo de valores faltantes (Interpolación por tiempo y resampling)
+df_pivot.interpolate(method='time', inplace=True)
+df_resampled = df_pivot.resample('1T', on='ReadTime').mean()  # Resampling a intervalos de 1 minuto
+df_resampled.fillna(method='bfill', inplace=True)  # Rellenar valores faltantes hacia atrás
+
+# Obtener datos en tiempo real desde Databricks y preprocesarlos
+#df_cleaned = get_data_from_databricks()
+st.write("Datos Resampleados:")
+st.write(df_resampled)  # Esta línea mostrará el dataframe en la aplicación Streamlit
