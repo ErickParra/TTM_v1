@@ -222,9 +222,11 @@ zeroshot_trainer = Trainer(
 )
 
 
-# import torch
-# torch.cuda.empty_cache()
-# predictions_test = zeroshot_trainer.predict(test_dataset)
+import torch
+torch.cuda.empty_cache()
+predictions_test = zeroshot_trainer.predict(test_dataset)
+st.write("predictions_test:")
+st.write(predictions_test)
 
 # torch.cuda.empty_cache()  # Libera memoria antes de la segunda predicción
 # predictions_validation = zeroshot_trainer.predict(valid_dataset)
