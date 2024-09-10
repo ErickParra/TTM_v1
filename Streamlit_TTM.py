@@ -283,6 +283,12 @@ finetune_forecast_trainer_new = Trainer(
     train_dataset=dataset,  # Usa tu dataset
 )
 
+
+predictions_test_new = finetune_forecast_trainer_new.predict(data_loader)
+predictions_validation_new = finetune_forecast_trainer_new.predict(data_loader)
+
+st.write(predictions_test_new)
+
 # # Realizar predicciones
 # predictions = finetune_forecast_trainer_new.predict(data_loader)
 # st.write("Predicciones:")
