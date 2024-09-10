@@ -274,38 +274,47 @@ zeroshot_trainer.evaluate(valid_dataset)
 # # Mostrar el plot en Streamlit
 # st.pyplot(fig)
 
+import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
+from torch.utils.data import DataLoader
 
-import torch
+# Asumiendo que ya tienes 'predictions_test' que es el resultado de tu modelo
+# Asegúrate de que 'predictions_test' contenga los datos predichos adecuadamente estructurados
 
-# Función para extraer datos del dataset
-def extract_data(dataset, index=None):
+# Función para extraer datos de un DataLoader
+def extract_data(dataset):
     loader = DataLoader(dataset, batch_size=1, shuffle=False)
-    real_data = []
-    for batch in loader:
-        inputs, targets = batch
-        real_data.append(targets.numpy())
-    return np.array(real_data).flatten()
+    features, targets = [], []
+    for data in loader:
+        x, y = data
+        features.append(x.numpy())
+        targets.append(y.numpy())
+    return np.array(features).squeeze(), np.array(targets).squeeze()
 
-# Extracción de valores reales
-real_values = extract_data(test_dataset)
+# Crear DataLoader para el conjunto de datos de prueba
+test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
-# Asumiendo que 'predictions_test' es una tupla que viene del Trainer de Hugging Face y contiene las predicciones
-predicted_values = predictions_test[0].squeeze()  # Ajusta según la estructura de tus datos
+# Extraer características y objetivos
+features, real_values = extract_data(test_loader)
 
-# Asegurándose que los arrays tengan el mismo tamaño
+# Asegúrate de que 'predictions_test' tenga la forma adecuada
+predicted_values = predictions_test[0].squeeze()  # Ajustar según tus datos
+
+# Verificar tamaños y ajustar si es necesario
 min_length = min(len(real_values), len(predicted_values))
 real_values = real_values[:min_length]
 predicted_values = predicted_values[:min_length]
 
-# Plot usando Matplotlib
+# Crear una figura para visualizar los datos
 plt.figure(figsize=(10, 5))
 plt.plot(real_values, label='Real Values')
 plt.plot(predicted_values, label='Predictions', linestyle='--')
-plt.title('Real vs Predicted Values')
-plt.xlabel('Sample Index')
-plt.ylabel('Value')
+plt.title('Comparison of Real and Predicted Values')
+plt.xlabel('Index')
+plt.ylabel('Values')
 plt.legend()
 plt.grid(True)
 
-# Mostrar en Streamlit
+# Mostrar el gráfico en Streamlit
 st.pyplot(plt)
