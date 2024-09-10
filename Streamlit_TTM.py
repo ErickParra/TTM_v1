@@ -251,7 +251,7 @@ target_column = target_columns  # Ajusta esto si tus targets están en más de u
 dataset = CustomDataset(df_cleaned, features_columns, target_column)
 
 st.write("Objeto Dataset:")
-st.write(plot_predictions(dataset))
+st.write(dataset)
 
 #plot_predictions(model= model, dset=df_cleaned, plot_dir="plot_dir", plot_prefix="test_finetunning", channel=8)
 #st.write(plot_predictions(model= model, dset=df_cleaned, plot_dir="plot_dir", plot_prefix="test_finetunning", channel=8))
