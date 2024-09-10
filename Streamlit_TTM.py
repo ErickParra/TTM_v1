@@ -224,6 +224,35 @@ predictions_test_new = finetune_forecast_trainer_new.predict(df_cleaned)
 st.write(plot_predictions(predictions_test_new))
 
 
+
+from torch.utils.data import Dataset, DataLoader
+import torch
+
+class CustomDataset(Dataset):
+    def __init__(self, dataframe, features_columns, target_column):
+        self.dataframe = dataframe
+        self.features = self.dataframe[features_columns].values
+        self.targets = self.dataframe[target_column].values
+
+    def __len__(self):
+        return len(self.dataframe)
+
+    def __getitem__(self, idx):
+        features = torch.tensor(self.features[idx], dtype=torch.float32)
+        target = torch.tensor(self.targets[idx], dtype=torch.float32)
+        return features, target
+
+# Asumiendo que 'target_columns' contiene los nombres de las columnas objetivo
+# y el resto son características
+features_columns = [col for col in df_cleaned.columns if col not in target_columns]
+target_column = target_columns  # Ajusta esto si tus targets están en más de una columna
+
+# Crear el objeto Dataset
+dataset = CustomDataset(df_cleaned, features_columns, target_column)
+
+st.write("Objeto Dataset:")
+st.write(plot_predictions(dataset))
+
 #plot_predictions(model= model, dset=df_cleaned, plot_dir="plot_dir", plot_prefix="test_finetunning", channel=8)
 #st.write(plot_predictions(model= model, dset=df_cleaned, plot_dir="plot_dir", plot_prefix="test_finetunning", channel=8))
 
