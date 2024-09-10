@@ -263,6 +263,31 @@ st.write(data_loader)
 
 
 
+# Configura TrainingArguments como antes
+finetune_forecast_args = TrainingArguments(
+    output_dir="output",
+    overwrite_output_dir=True,
+    evaluation_strategy="epoch",
+    save_strategy="epoch",
+    learning_rate=2e-5,
+    per_device_train_batch_size=16,
+    per_device_eval_batch_size=16,
+    num_train_epochs=3,
+    weight_decay=0.01,
+)
+
+# Crea el Trainer
+finetune_forecast_trainer_new = Trainer(
+    model=model,
+    args=finetune_forecast_args,
+    train_dataset=dataset,  # Usa tu dataset
+)
+
+# Realizar predicciones
+predictions = finetune_forecast_trainer_new.predict(data_loader)
+st.write("Predicciones:")
+st.write(predictions)
+
 
 #plot_predictions(model= model, dset=df_cleaned, plot_dir="plot_dir", plot_prefix="test_finetunning", channel=8)
 #st.write(plot_predictions(model= model, dset=df_cleaned, plot_dir="plot_dir", plot_prefix="test_finetunning", channel=8))
