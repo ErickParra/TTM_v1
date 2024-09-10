@@ -13,6 +13,7 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta
 from databricks import sql
+import numpy as np
 
 from tsfm_public.toolkit.time_series_preprocessor import TimeSeriesPreprocessor
 
@@ -138,10 +139,50 @@ context_length = 1024
 forecast_length = 96
 fewshot_fraction = 1
 
+# Tamaño total del dataframe
+total_rows = len(df_cleaned)
+st.write("Largo Dataframe:")
+st.write(total_rows)
+
+# Proporciones deseadas
+train_fraction = 0.7
+valid_fraction = 0.2
+test_fraction = 0.1
+
+st.write("Train:")
+st.write(train_fraction)
+st.write("Valid:")
+st.write(valid_fraction)
+st.write("Test:")
+st.write(test_fraction)
+
+# Calculando el número de filas para cada split
+train_rows = int(np.floor(train_fraction * total_rows))
+valid_rows = int(np.floor(valid_fraction * total_rows))
+test_rows = total_rows - train_rows - valid_rows  # Asegurar que la suma no excede el total
+st.write("Largo Dataframe:")
+st.write(test_rows)
+
+
+
+#We use the original splits from the Informer paper
+from tsfm_public.toolkit.time_series_preprocessor import TimeSeriesPreprocessor
 
 timestamp_column = "ReadTime"
 id_columns = []
+
 target_columns = [col for col in df_cleaned.columns if col != 'ReadTime']
+#target_columns = ["Hydraulic Oil Temperature (PC5500)"]
+
+split_config = {
+                "train": [0, train_rows],
+                "valid": [train_rows, train_rows + valid_rows],
+                "test": [
+                    train_rows + valid_rows,
+                    train_rows + valid_rows + test_rows,
+                ],
+            }
+
 
 column_specifiers = {
     "timestamp_column": timestamp_column,
@@ -150,183 +191,16 @@ column_specifiers = {
     "control_columns": [],
 }
 
-
-# Inicialización del preprocesador
-preprocessor = TimeSeriesPreprocessor(
+tsp = TimeSeriesPreprocessor(
     **column_specifiers,
     context_length=context_length,
     prediction_length=forecast_length,
-    scaling=True,  # Habilitar la normalización
-    encode_categorical=False,
-    scaler_type="standard"  # Tipo de escalador
-)
-
-
-# Asumiendo que has definido column_specifiers y otros parámetros correctamente
-preprocessor = TimeSeriesPreprocessor(
-    timestamp_column="ReadTime",
-    id_columns=[],  # Asegúrate de que esta configuración es correcta. Si tienes columnas de ID, debes incluirlas.
-    target_columns=[col for col in df_cleaned.columns if col != 'ReadTime'],
-    control_columns=[],  # Incluye aquí cualquier columna de control si la tienes
-    context_length=1024,
-    prediction_length=96,
     scaling=True,
     encode_categorical=False,
-    scaler_type="standard"
+    scaler_type="standard",
 )
 
-# Verificar estructura de datos y aplicar preprocesador
-if hasattr(preprocessor, 'transform'):
-    df_scaled = preprocessor.transform(df_cleaned)
-    st.write("IF OK:")
-    st.write(df_scaled)
-else:
-    print("El preprocesador no tiene el método 'transform'. Revisa la implementación.")
-    st.write("El preprocesador no tiene el método 'transform'. Revisa la implementación.")
-
-# Aplicar preprocesador a los datos limpios
-#df_scaled = preprocessor.get_datasets(df_cleaned)
-
-
-# Cargar el modelo usando TinyTimeMixerForPrediction.from_pretrained
-model = TinyTimeMixerForPrediction.from_pretrained(
-    pretrained_model_name_or_path="best_model",  # Base URL para buscar archivos
-    revision=TTM_MODEL_REVISION,             # Revisión del modelo, asegúrate de que está correctamente definido
-    head_dropout=0.0,
-    dropout=0.0,
-    loss="mse"
+train_dataset, valid_dataset, test_dataset = tsp.get_datasets(
+    df_cleaned, split_config, fewshot_fraction=fewshot_fraction, fewshot_location="first"
 )
-
-st.write("Model Fine-Tunning:")
-st.write(model)
-
-
-#st.write("Data Normalizada:")
-#st.write(df_scaled)
-
-
-
-
-
-# finetune_forecast_args = TrainingArguments(
-#      output_dir="output",
-#      overwrite_output_dir=True
-# )
-
-# finetune_forecast_trainer_new = Trainer(
-#      model=model,
-#      args=finetune_forecast_args
-# )
-
-
-
-# predictions_test_new = finetune_forecast_trainer_new.predict(df_cleaned)
-# st.write(plot_predictions(predictions_test_new))
-
-
-
-from torch.utils.data import Dataset, DataLoader
-import torch
-
-class CustomDataset(Dataset):
-    def __init__(self, dataframe, features_columns, target_column):
-        self.dataframe = dataframe
-        self.features = self.dataframe[features_columns].values
-        self.targets = self.dataframe[target_column].values
-
-    def __len__(self):
-        return len(self.dataframe)
-
-    def __getitem__(self, idx):
-        features = torch.tensor(self.features[idx], dtype=torch.float32)
-        target = torch.tensor(self.targets[idx], dtype=torch.float32)
-        return features, target
-
-# Asumiendo que 'target_columns' contiene los nombres de las columnas objetivo
-# y el resto son características
-features_columns = [col for col in df_cleaned.columns if col not in target_columns]
-target_column = target_columns  # Ajusta esto si tus targets están en más de una columna
-
-# Crear el objeto Dataset
-dataset = CustomDataset(df_cleaned, features_columns, target_column)
-
-st.write("Objeto Dataset:")
-st.write(dataset)
-
-from torch.utils.data import DataLoader
-
-# Crear DataLoader para el entrenamiento
-data_loader = DataLoader(dataset, batch_size=32, shuffle=True)  # Ajusta el batch_size según lo necesario
-st.write("Crear DataLoader:")
-st.write(data_loader)
-
-
-
-
-# Configura TrainingArguments como antes
-finetune_forecast_args = TrainingArguments(
-    output_dir="output",
-    overwrite_output_dir=True,
-    evaluation_strategy="epoch",
-    save_strategy="epoch",
-    learning_rate=2e-5,
-    per_device_train_batch_size=16,
-    per_device_eval_batch_size=16,
-    num_train_epochs=3,
-    weight_decay=0.01,
-)
-
-# Crea el Trainer
-finetune_forecast_trainer_new = Trainer(
-    model=model,
-    args=finetune_forecast_args,
-    train_dataset=dataset,  # Usa tu dataset
-)
-
-
-predictions_test_new = finetune_forecast_trainer_new.predict(data_loader)
-predictions_validation_new = finetune_forecast_trainer_new.predict(data_loader)
-
-st.write(predictions_test_new)
-
-# # Realizar predicciones
-# predictions = finetune_forecast_trainer_new.predict(data_loader)
-# st.write("Predicciones:")
-# st.write(predictions)
-
-
-#plot_predictions(model= model, dset=df_cleaned, plot_dir="plot_dir", plot_prefix="test_finetunning", channel=8)
-#st.write(plot_predictions(model= model, dset=df_cleaned, plot_dir="plot_dir", plot_prefix="test_finetunning", channel=8))
-
-#predictions = finetune_forecast_trainer_new.predict(df_cleaned)
-
-#st.write("Predictions 1:")
-#st.write(predictions)
-
-
-
-
-
-# # Cargar el modelo finetuneado
-# model = load_model()
-
-# # # Hacer predicción con los datos escalados
-#  predictions = model.predict(df_scaled)  # Asegúrate de que el método 'predict' esté correctamente especificado
-#  st.write("Predicciones:")
-#  st.write(predictions)
-
-# # # Visualizar resultados
-#  def plot_results(predictions, df_scaled):
-#      fig, ax = plt.subplots(figsize=(10, 5))
-#      ax.plot(df_scaled.index, df_scaled[target_columns[0]], label='Real')  # Ajusta 'target_columns[0]' según tu columna objetivo
-#      ax.plot(df_scaled.index, predictions, label='Predicción', linestyle='--')
-#      ax.set_title("Comparación de Temperatura Real vs. Predicha")
-#      ax.set_xlabel("Tiempo")
-#      ax.set_ylabel("Temperatura")
-#      ax.legend()
-#      return fig
-
-# # # Botón en Streamlit para visualizar las predicciones
-#  if st.button("Ver Predicciones vs Real"):
-#      fig = plot_results(predictions, df_scaled)
-#      st.pyplot(fig)
+print(f"Data lengths: train = {len(train_dataset)}, val = {len(valid_dataset)}, test = {len(test_dataset)}")
