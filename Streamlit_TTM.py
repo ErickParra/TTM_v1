@@ -244,7 +244,20 @@ zeroshot_trainer.evaluate(valid_dataset)
 #st.write(plot_predictions(model= zeroshot_trainer.model, dset=test_dataset, plot_dir="output", plot_prefix="test_zeroshot", channel=8))
 OUT_DIR = "output"
 
-plot_predictions(model= zeroshot_trainer.model, dset=test_dataset, plot_dir=os.path.join(OUT_DIR, "ettm2"), plot_prefix="test_zeroshot", channel=8)
+def zeroshot_eval(dataset_name, batch_size, context_length=512, forecast_length=96, prediction_filter_length=None):
+    # Get data
+    _, _, dset_test = load_dataset(
+        dataset_name=dataset_name,
+        context_length=context_length,
+        forecast_length=forecast_length,
+        fewshot_fraction=1.0,
+        dataset_root_path=OUT_DIR,
+    )
+
+
+zeroshot_eval(dataset_name=test_dataset, batch_size=64)
+st.write(zeroshot_eval(dataset_name=test_dataset, batch_size=64))
+#plot_predictions(model= zeroshot_trainer.model, dset=test_dataset, plot_dir=os.path.join(OUT_DIR, "ettm2"), plot_prefix="test_zeroshot", channel=8)
 
 
 # # Supongamos que 'test_dataset' y 'predictions_test' están definidos correctamente.
