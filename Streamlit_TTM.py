@@ -178,9 +178,11 @@ preprocessor = TimeSeriesPreprocessor(
 # Verificar estructura de datos y aplicar preprocesador
 if hasattr(preprocessor, 'transform'):
     df_scaled = preprocessor.transform(df_cleaned)
+    st.write("IF OK:")
+    st.write(df_scaled)
 else:
     print("El preprocesador no tiene el método 'transform'. Revisa la implementación.")
-
+    st.write("El preprocesador no tiene el método 'transform'. Revisa la implementación.")
 
 # Aplicar preprocesador a los datos limpios
 #df_scaled = preprocessor.get_datasets(df_cleaned)
