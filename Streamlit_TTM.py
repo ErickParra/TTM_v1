@@ -163,19 +163,10 @@ preprocessor = TimeSeriesPreprocessor(
 
 
 
-# Define la URL base donde se encuentran los archivos en GitHub
-base_url = 'https://raw.githubusercontent.com/ErickParra/TTM_v1/main/'
-
-# Especifique la URL completa para el archivo de configuración y los pesos del modelo
-config_url = "{base_url}config.json"
-model_url = "{base_url}model.safetensors"
-
 # Cargar el modelo usando TinyTimeMixerForPrediction.from_pretrained
 model = TinyTimeMixerForPrediction.from_pretrained(
     pretrained_model_name_or_path="best_model",  # Base URL para buscar archivos
     revision=TTM_MODEL_REVISION,             # Revisión del modelo, asegúrate de que está correctamente definido
-    config=config_url,                       # URL del archivo de configuración JSON
-    safetensors=model_url,                   # URL del archivo de pesos del modelo
     head_dropout=0.0,
     dropout=0.0,
     loss="mse"
