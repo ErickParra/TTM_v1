@@ -163,7 +163,8 @@ st.write(valid_rows)
 st.write("Test:")
 st.write(test_rows)
 
-
+if 'ReadTime' not in df_cleaned.columns:
+    df_cleaned.reset_index(inplace=True)
 
 timestamp_column = "ReadTime"
 id_columns = []
@@ -181,6 +182,29 @@ split_config = {
             }
 
 
+column_specifiers = {
+    "timestamp_column": timestamp_column,
+    "id_columns": id_columns,
+    "target_columns": target_columns,
+    "control_columns": [],
+}
+
+tsp = TimeSeriesPreprocessor(
+    **column_specifiers,
+    context_length=context_length,
+    prediction_length=forecast_length,
+    scaling=True,
+    encode_categorical=False,
+    scaler_type="standard",
+)
+
+train_dataset, valid_dataset, test_dataset = tsp.get_datasets(
+    df_cleaned, split_config, fewshot_fraction=fewshot_fraction, fewshot_location="first"
+)
+#print(f"Data lengths: train = {len(train_dataset)}, val = {len(valid_dataset)}, test = {len(test_dataset)}")
+
+
+import pandas as pd
 
 # Verificar las columnas del DataFrame
 st.write("Columnas en df_cleaned:")
