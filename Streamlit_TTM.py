@@ -1,10 +1,10 @@
 import streamlit as st
 import pandas as pd
-from transformers import TinyTimeMixerForPrediction
+#from transformers import TinyTimeMixerForPrediction
 from datetime import datetime, timedelta
 from databricks import sql
 import matplotlib.pyplot as plt
-from tsfm_public.toolkit.visualization import plot_predictions
+#from tsfm_public.toolkit.visualization import plot_predictions
 
 # Acceder a los secrets almacenados en Streamlit Cloud
 server = st.secrets["server"]
