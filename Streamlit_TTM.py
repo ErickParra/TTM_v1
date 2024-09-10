@@ -162,7 +162,7 @@ preprocessor = TimeSeriesPreprocessor(
 )
 
 # Aplicar preprocesador a los datos limpios
-df_scaled = preprocessor.get_datasets(df_cleaned)
+#df_scaled = preprocessor.get_datasets(df_cleaned)
 
 
 # Cargar el modelo usando TinyTimeMixerForPrediction.from_pretrained
@@ -179,9 +179,23 @@ st.write(model)
 
 
 st.write("Data Normalizada:")
-st.write(df_scaled)
+st.write(df_cleaned)
 
 
+finetune_forecast_args = TrainingArguments(
+    output_dir="output",
+    overwrite_output_dir=True
+)
+
+finetune_forecast_trainer_new = Trainer(
+    model=model,
+    args=finetune_forecast_args
+)
+
+predictions = finetune_forecast_trainer_new.predict(df_cleaned)
+
+st.write("Predictions 1:")
+st.write(predictions)
 
 # # Cargar el modelo finetuneado
 # model = load_model()
