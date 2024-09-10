@@ -101,10 +101,10 @@ df_pivot[columns_to_numeric] = df_pivot[columns_to_numeric].apply(pd.to_numeric,
 
 # Manejo de valores faltantes (Interpolación por tiempo y resampling)
 df_pivot.interpolate(method='time', inplace=True)
-df_resampled = df_pivot.resample('1T', on='ReadTime').mean()  # Resampling a intervalos de 1 minuto
-df_resampled.fillna(method='bfill', inplace=True)  # Rellenar valores faltantes hacia atrás
+#df_resampled = df_pivot.resample('1T', on='ReadTime').mean()  # Resampling a intervalos de 1 minuto
+#df_resampled.fillna(method='bfill', inplace=True)  # Rellenar valores faltantes hacia atrás
 
 # Obtener datos en tiempo real desde Databricks y preprocesarlos
 #df_cleaned = get_data_from_databricks()
 st.write("Datos Resampleados:")
-st.write(df_resampled)  # Esta línea mostrará el dataframe en la aplicación Streamlit
+st.write(df_pivot)  # Esta línea mostrará el dataframe en la aplicación Streamlit
