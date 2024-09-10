@@ -15,9 +15,9 @@ token = st.secrets["token"]
 # Conexión a Databricks y preprocesamiento
 def get_data_from_databricks():
     connection = sql.connect(
-        server_hostname={server},
-        http_path={http},
-        access_token={token}
+        server_hostname=server,
+        http_path=http,
+        access_token=token
     )
 
     # Obtener el tiempo actual y calcular las últimas 48 horas
