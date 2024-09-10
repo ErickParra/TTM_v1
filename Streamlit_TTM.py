@@ -175,13 +175,13 @@ def load_model():
         os.makedirs(temp_dir)
     
     # Descargar y guardar el archivo de configuración
-    config_path = os.path.join(temp_dir, 'config.json')
+    config_path = os.path.join(base_url, 'config.json')
     response = requests.get(config_url)
     with open(config_path, 'wb') as f:
         f.write(response.content)
     
     # Descargar y guardar el archivo de pesos del modelo
-    model_path = os.path.join(temp_dir, 'model.safetensors')
+    model_path = os.path.join(base_url, 'model.safetensors')
     response = requests.get(model_url)
     with open(model_path, 'wb') as f:
         f.write(response.content)
@@ -196,8 +196,10 @@ def load_model():
     return model
 
 # Llamar a la función para cargar el modelo
-model = load_model()
+#model = load_model()
+base_url = 'https://raw.githubusercontent.com/ErickParra/TTM_v1/main/'
 
+model = TinyTimeMixerForPrediction.from_pretrained(base_url, revision=TTM_MODEL_REVISION, head_dropout=0.0,dropout=0.0,loss="mse")
 
 
 # Escalar los datos
