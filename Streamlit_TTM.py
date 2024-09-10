@@ -207,3 +207,30 @@ zeroshot_model = TinyTimeMixerForPrediction.from_pretrained("ibm/TTM", revision=
 
 st.write("zeroshot_model:")
 st.write(zeroshot_model)
+
+
+
+temp_dir = tempfile.mkdtemp()
+
+zeroshot_trainer = Trainer(
+    model=zeroshot_model,
+    args=TrainingArguments(
+        output_dir=temp_dir,
+        per_device_eval_batch_size=2,
+        eval_accumulation_steps=10,
+    )
+)
+
+
+import torch
+torch.cuda.empty_cache()
+predictions_test = zeroshot_trainer.predict(test_dataset)
+
+torch.cuda.empty_cache()  # Libera memoria antes de la segunda predicción
+predictions_validation = zeroshot_trainer.predict(valid_dataset)
+
+predictions_test[0][0].shape
+
+zeroshot_trainer.evaluate(valid_dataset)
+
+plot_predictions(model= zeroshot_trainer.model, dset=test_dataset, plot_dir=os.path.join(OUT_DIR, "ettm2"), plot_prefix="test_zeroshot", channel=8)
