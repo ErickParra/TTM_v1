@@ -101,3 +101,8 @@ def get_data_from_databricks():
     df_cleaned = df_resampled.drop(columns=columns_to_drop)
     return df_cleaned
 
+# Obtener datos en tiempo real desde Databricks y preprocesarlos
+df_cleaned = get_data_from_databricks()
+st.write("Datos limpios y procesados:")
+st.write(df_cleaned)  # Esta línea mostrará el dataframe en la aplicación Streamlit
+
