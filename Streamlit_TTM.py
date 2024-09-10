@@ -5,6 +5,9 @@ from datetime import datetime, timedelta
 from databricks import sql
 import matplotlib.pyplot as plt
 #from tsfm_public.toolkit.visualization import plot_predictions
+import requests
+import os
+
 
 import streamlit as st
 import pandas as pd
@@ -155,3 +158,74 @@ preprocessor = TimeSeriesPreprocessor(
     encode_categorical=False,
     scaler_type="standard"  # Tipo de escalador
 )
+
+
+
+@st.cache(allow_output_mutation=True)
+def load_model():
+    # Definir las URLs de los archivos raw en GitHub
+    config_url = 'https://raw.githubusercontent.com/ErickParra/TTM_v1/main/config.json'
+    model_url = 'https://raw.githubusercontent.com/ErickParra/TTM_v1/main/model.safetensors'
+    
+    # Crear directorio temporal para almacenar los archivos
+    temp_dir = 'tmp_model'
+    if not os.path.exists(temp_dir):
+        os.makedirs(temp_dir)
+    
+    # Descargar y guardar el archivo de configuración
+    config_path = os.path.join(temp_dir, 'config.json')
+    response = requests.get(config_url)
+    with open(config_path, 'wb') as f:
+        f.write(response.content)
+    
+    # Descargar y guardar el archivo de pesos del modelo
+    model_path = os.path.join(temp_dir, 'model.safetensors')
+    response = requests.get(model_url)
+    with open(model_path, 'wb') as f:
+        f.write(response.content)
+    
+    # Cargar el modelo usando las rutas locales
+    from transformers import TinyTimeMixerForPrediction
+    model = TinyTimeMixerForPrediction.from_pretrained(temp_dir, 
+                                                       config=config_path, 
+                                                       safetensors=model_path)
+    return model
+
+# Llamar a la función para cargar el modelo
+model = load_model()
+
+
+
+# Escalar los datos
+df_scaled = preprocessor.transform(df_cleaned)
+
+# Streamlit UI para mostrar el título
+st.title("Predicción de Temperatura de Aceite Hidráulico (TTM)")
+
+# Mostrar datos preprocesados
+st.write("Datos preprocesados para predicciones:")
+st.write(df_scaled.head())
+
+# Cargar el modelo finetuneado
+model = load_model()
+
+# Hacer predicción con los datos escalados
+predictions = model.predict(df_scaled)  # Asegúrate de que el método 'predict' esté correctamente especificado
+st.write("Predicciones:")
+st.write(predictions)
+
+# Visualizar resultados
+def plot_results(predictions, df_scaled):
+    fig, ax = plt.subplots(figsize=(10, 5))
+    ax.plot(df_scaled.index, df_scaled[target_columns[0]], label='Real')  # Ajusta 'target_columns[0]' según tu columna objetivo
+    ax.plot(df_scaled.index, predictions, label='Predicción', linestyle='--')
+    ax.set_title("Comparación de Temperatura Real vs. Predicha")
+    ax.set_xlabel("Tiempo")
+    ax.set_ylabel("Temperatura")
+    ax.legend()
+    return fig
+
+# Botón en Streamlit para visualizar las predicciones
+if st.button("Ver Predicciones vs Real"):
+    fig = plot_results(predictions, df_scaled)
+    st.pyplot(fig)

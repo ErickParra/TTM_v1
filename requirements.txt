@@ -19,3 +19,5 @@ databricks-sql-connector
 matplotlib
 plotly
 IPython
+os
+requests
