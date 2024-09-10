@@ -166,6 +166,7 @@ def load_model():
     # Definir las URLs de los archivos raw en GitHub
     config_url = 'https://raw.githubusercontent.com/ErickParra/TTM_v1/main/config.json'
     model_url = 'https://raw.githubusercontent.com/ErickParra/TTM_v1/main/model.safetensors'
+    base_url = 'https://github.com/ErickParra/TTM_v1/tree/main'
     
     # Crear directorio temporal para almacenar los archivos
     temp_dir = 'tmp_model'
@@ -186,9 +187,11 @@ def load_model():
     
     # Cargar el modelo usando las rutas locales
     #from transformers import TinyTimeMixerForPrediction
-    model = TinyTimeMixerForPrediction.from_pretrained(temp_dir, 
-                                                       config=config_path, 
-                                                       safetensors=model_path)
+    #model = TinyTimeMixerForPrediction.from_pretrained(temp_dir, 
+    #                                                   config=config_path, 
+    #                                                   safetensors=model_path)
+    model = TinyTimeMixerForPrediction.from_pretrained(base_url, revision=TTM_MODEL_REVISION, head_dropout=0.0,dropout=0.0,loss="mse")
+
     return model
 
 # Llamar a la función para cargar el modelo
