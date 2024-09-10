@@ -155,8 +155,6 @@ test_fraction = 0.1
 train_rows = int(np.floor(train_fraction * total_rows))
 valid_rows = int(np.floor(valid_fraction * total_rows))
 test_rows = total_rows - train_rows - valid_rows  # Asegurar que la suma no excede el total
-st.write("Largo Dataframe:")
-st.write(test_rows)
 
 st.write("Train:")
 st.write(train_rows)
@@ -183,10 +181,27 @@ split_config = {
             }
 
 
+
+# Verificar las columnas del DataFrame
+st.write("Columnas en df_cleaned:")
+st.write(df_cleaned.columns)
+
+# Asegurar que la columna 'ReadTime' esté en formato datetime
+if df_cleaned['ReadTime'].dtype != 'datetime64[ns]':
+    df_cleaned['ReadTime'] = pd.to_datetime(df_cleaned['ReadTime'])
+    st.write("Convertido 'ReadTime' a datetime.")
+
+# Verificar si hay filas vacías en la columna de tiempo
+if df_cleaned['ReadTime'].isnull().any():
+    st.write("Existen valores nulos en 'ReadTime'.")
+else:
+    st.write("No hay valores nulos en 'ReadTime'.")
+
+# Continuar con la configuración del preprocesador
 column_specifiers = {
-    "timestamp_column": timestamp_column,
-    "id_columns": id_columns,
-    "target_columns": target_columns,
+    "timestamp_column": "ReadTime",
+    "id_columns": [],
+    "target_columns": [col for col in df_cleaned.columns if col != 'ReadTime'],
     "control_columns": [],
 }
 
@@ -199,7 +214,10 @@ tsp = TimeSeriesPreprocessor(
     scaler_type="standard",
 )
 
-train_dataset, valid_dataset, test_dataset = tsp.get_datasets(
-    df_cleaned, split_config, fewshot_fraction=fewshot_fraction, fewshot_location="first"
-)
-#print(f"Data lengths: train = {len(train_dataset)}, val = {len(valid_dataset)}, test = {len(test_dataset)}")
+try:
+    train_dataset, valid_dataset, test_dataset = tsp.get_datasets(
+        df_cleaned, split_config, fewshot_fraction=fewshot_fraction, fewshot_location="first"
+    )
+    st.write("Datasets preparados correctamente.")
+except Exception as e:
+    st.write("Error al preparar datasets:", e)
