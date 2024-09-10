@@ -37,72 +37,10 @@ def get_data_from_databricks():
     """
     df = pd.read_sql(query, connection)
 
-    # Remover columnas no necesarias
-    df_filtered = df.drop(columns=[
-        "Location", "NextAction", "NextActionTime", "LastAction", "LastActionTime", 
-        "LoadedMaterial", "OperatorId", "CustomerName", "ParameterNumber", "ParameterID", 
-        "ParameterRequestID", "EquipmentId", "EquipmentGroup", "EquipmentType", 
-        "EquipmentManufacturer", "ParameterStringValue", "InterfaceModelName", 
-        "PositionReadTime", "X", "Y", "Z", "Heading", "Hdop", "Vdop", "Date_ReadTime", 
-        "InterfaceName"
-    ])
 
-    # Reordenar columnas
-    df_filtered = df_filtered[["ReadTime", "ParameterName", "ParameterFloatValue", "EquipmentName", "EquipmentModel"]]
-
-    # Pivotear el dataframe
-    df_pivot = df_filtered.pivot_table(index=["ReadTime", "EquipmentName", "EquipmentModel"], 
-                                       columns="ParameterName", values="ParameterFloatValue", aggfunc="max").reset_index()
-
-    # Convertir columnas a sus tipos adecuados
-    columns_to_numeric = [
-        'Engine Oil Temperature (Engine2) (PC5500)', 'Remote Oil Tank Level (Pressure/Engine2) (PC5500)',
-        'Engine Crankcase Pressure (Cense-QSK38)', 'Engine Coolant Pressure (Cense-QSK38)',
-        'Intake Manifold 2 Temperature - Parent (Cense-QSK38)', 'Fuel Temperature (Engine1) (PC5500)',
-        'Grease Barrel Level (CLS1 Central) (PC5500)', 'Transmission Oil Temperature (Transmission1) (PC5500)',
-        'Turbocharger 2 Boost Pressure (Cense-QSK38)', 'Engine Oil Pressure (Cense-QSK38)',
-        'Engine Intake Manifold 1 Temperature (Cense-QSK38)', 'Engine Coolant Temperature (Cense-QSK38)',
-        'Remote Oil Tank Level (Pressure/Engine1) (PC5500)', 'Turbocharger 1 Boost Pressure (Cense-QSK38)',
-        'Engine Percent Load At Current Speed (Cense-QSK38)', 'Ambient Temperature (PC5500)',
-        'Engine Oil Temperature (Engine1) (PC5500)', 'Hydraulic Oil Temperature (PC5500)',
-        'Coolant Level (Engine1) (PC5500)', 'Hydraulic Oil Tank Level (Pressure) (PC5500)',
-        'Lubrication Cycle Counter SLS (PC5500)', 'Engine Speed (Cense-QSK38)',
-        'Engine 2 Oil Level (PC5500)', 'Engine 2 Fuel Temperature (PC5500)', 'Coolant Temperature (Engine2) (PC5500)',
-        'Engine Oil Temperature 1 - Parent (Cense-QSK38)', 'Air Intake Manifold Temperature (Engine2) (PC5500)',
-        'Grease Barrel Level (CLS2 Attachment) (PC5500)', 'Hydraulic Oil Level (Pressure) (PC5500)',
-        'Fuel Level (Pressure) (PC5500)', 'Grease Barrel Level (SLS) (PC5500)', 'Coolant Temperature (Engine1) (PC5500)',
-        'Coolant Level (Engine2) (PC5500)', 'Water In Fuel Indicator (Cense-QSK38)', 'Total Vehicle Hours (PC5500)'
-    ]
-
-    df_pivot[columns_to_numeric] = df_pivot[columns_to_numeric].apply(pd.to_numeric, errors='coerce')
-
-    # Manejo de valores faltantes (Interpolación por tiempo y resampling)
-    df_pivot.interpolate(method='time', inplace=True)
-    df_resampled = df_pivot.resample('1T', on='ReadTime').mean()  # Resampling a intervalos de 1 minuto
-    df_resampled.fillna(method='bfill', inplace=True)  # Rellenar valores faltantes hacia atrás
-
-    # Eliminar columnas innecesarias
-    columns_to_drop = [
-        'Engine Oil Temperature (Engine2) (PC5500)', 'Remote Oil Tank Level (Pressure/Engine2) (PC5500)',
-        'Fuel Temperature (Engine2) (PC5500)', 'Engine oil level remote reservoir (Cense-QSK38)',
-        'Engine Crankcase Pressure (Cense-QSK38)', 'Fuel Temperature (Engine1) (PC5500)',
-        'Grease Barrel Level (CLS1 Central) (PC5500)', 'Remote Oil Tank Level (Pressure/Engine1) (PC5500)',
-        'Lubrication Cycle Counter CLS2 (PC5500)', 'Engine 2 Fuel Temperature (PC5500)', 'Ambient Temperature (PC5500)',
-        'Coolant Level (Engine1) (PC5500)', 'Hydraulic Oil Tank Level (Pressure) (PC5500)',
-        'Lubrication Cycle Counter SLS (PC5500)', 'Lubrication Cycle Counter CLS1 (PC5500)', 'Engine 2 Oil Level (PC5500)',
-        'Air Intake Manifold Temperature (Engine2) (PC5500)', 'Grease Barrel Level (CLS2 Attachment) (PC5500)',
-        'Air Intake Manifold Temperature (Engine1) (PC5500)', 'Grease Barrel Level (SLS) (PC5500)',
-        'Transmission Oil Temperature (Transmission1) (PC5500)', 'Engine Oil Temperature 1 - Parent (Cense-QSK38)',
-        'Total Vehicle Hours (PC5500)', 'Engine 2 Oil Temperature 1 (PC5500)', 'Transmission Oil Temperature (Transmission2) (PC5500)',
-        'Water In Fuel Indicator (Cense-QSK38)', 'Coolant Level (Engine2) (PC5500)', 'Hydraulic Oil Level (Pressure) (PC5500)',
-        'Coolant Temperature (Engine2) (PC5500)', 'Engine Oil Temperature (Engine1) (PC5500)', 'Fuel Level (Pressure) (PC5500)'
-    ]
-
-    df_cleaned = df_resampled.drop(columns=columns_to_drop)
-    return df_cleaned
 
 # Obtener datos en tiempo real desde Databricks y preprocesarlos
-df_cleaned = get_data_from_databricks()
+#df_cleaned = get_data_from_databricks()
 st.write("Datos limpios y procesados:")
-st.write(df_cleaned)  # Esta línea mostrará el dataframe en la aplicación Streamlit
+st.write(df)  # Esta línea mostrará el dataframe en la aplicación Streamlit
 
