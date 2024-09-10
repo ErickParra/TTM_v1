@@ -149,12 +149,7 @@ train_fraction = 0.7
 valid_fraction = 0.2
 test_fraction = 0.1
 
-st.write("Train:")
-st.write(train_fraction)
-st.write("Valid:")
-st.write(valid_fraction)
-st.write("Test:")
-st.write(test_fraction)
+
 
 # Calculando el número de filas para cada split
 train_rows = int(np.floor(train_fraction * total_rows))
@@ -163,10 +158,14 @@ test_rows = total_rows - train_rows - valid_rows  # Asegurar que la suma no exce
 st.write("Largo Dataframe:")
 st.write(test_rows)
 
+st.write("Train:")
+st.write(train_rows)
+st.write("Valid:")
+st.write(valid_rows)
+st.write("Test:")
+st.write(test_rows)
 
 
-#We use the original splits from the Informer paper
-from tsfm_public.toolkit.time_series_preprocessor import TimeSeriesPreprocessor
 
 timestamp_column = "ReadTime"
 id_columns = []
@@ -203,4 +202,4 @@ tsp = TimeSeriesPreprocessor(
 train_dataset, valid_dataset, test_dataset = tsp.get_datasets(
     df_cleaned, split_config, fewshot_fraction=fewshot_fraction, fewshot_location="first"
 )
-print(f"Data lengths: train = {len(train_dataset)}, val = {len(valid_dataset)}, test = {len(test_dataset)}")
+#print(f"Data lengths: train = {len(train_dataset)}, val = {len(valid_dataset)}, test = {len(test_dataset)}")
