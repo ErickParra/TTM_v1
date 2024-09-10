@@ -246,30 +246,58 @@ zeroshot_trainer.evaluate(valid_dataset)
 
 
 
-# Supongamos que 'test_dataset' y 'predictions_test' están definidos correctamente.
-window = 96
+# # Supongamos que 'test_dataset' y 'predictions_test' están definidos correctamente.
+# window = 96
 
-# Creación de DataFrames de pandas a partir de tensores de PyTorch
-observed_df = pd.DataFrame(torch.cat([test_dataset[window]['past_values'], test_dataset[window]['future_values']]))
-predictions_df = pd.DataFrame(predictions_test[0][0][window])
-predictions_df.index += 512  # Ajustar el índice para alinearlo con las observaciones futuras
+# # Creación de DataFrames de pandas a partir de tensores de PyTorch
+# observed_df = pd.DataFrame(torch.cat([test_dataset[window]['past_values'], test_dataset[window]['future_values']]))
+# predictions_df = pd.DataFrame(predictions_test[0][0][window])
+# predictions_df.index += 512  # Ajustar el índice para alinearlo con las observaciones futuras
 
-# Configurar tamaño de la figura y realizar múltiples subplots
-fig, axs = plt.subplots(21, 1, figsize=(10, 42))  # Ajusta el número de plots según tus necesidades
+# # Configurar tamaño de la figura y realizar múltiples subplots
+# fig, axs = plt.subplots(21, 1, figsize=(10, 42))  # Ajusta el número de plots según tus necesidades
 
-for i in range(21):  # Asumiendo que tienes 21 series de tiempo
-    axs[i].plot(observed_df.loc[0:512, i], label="Past Values")
-    axs[i].plot(observed_df.loc[512:, i], label="Observed Future Values")
-    axs[i].plot(predictions_df.loc[512:, i], label="Predicted Values")
+# for i in range(21):  # Asumiendo que tienes 21 series de tiempo
+#     axs[i].plot(observed_df.loc[0:512, i], label="Past Values")
+#     axs[i].plot(observed_df.loc[512:, i], label="Observed Future Values")
+#     axs[i].plot(predictions_df.loc[512:, i], label="Predicted Values")
 
-    axs[i].legend()
-    axs[i].set_xlabel("Time")
-    axs[i].set_ylabel("Value")
-    axs[i].set_title("Time Series {}".format(i+1))
-    axs[i].grid(True)
+#     axs[i].legend()
+#     axs[i].set_xlabel("Time")
+#     axs[i].set_ylabel("Value")
+#     axs[i].set_title("Time Series {}".format(i+1))
+#     axs[i].grid(True)
 
-# Ajustar layout para mejor visualización
-plt.tight_layout()
+# # Ajustar layout para mejor visualización
+# plt.tight_layout()
+
+# # Mostrar el plot en Streamlit
+# st.pyplot(fig)
+
+
+import matplotlib.pyplot as plt
+import streamlit as st
+
+# Supongamos que estas son tus series de tiempo de valores reales y predichos
+# Asegúrate de reemplazar esto con cómo realmente accedes a tus datos
+real_values = test_dataset['target_column']  # Asegúrate de que 'target_column' sea el nombre correcto
+predicted_values = predictions_test[0]  # Asume que este es el formato de tus predicciones
+
+# Crear un DataFrame para facilitar el plot
+df_plot = pd.DataFrame({
+    'Real': real_values,
+    'Predicted': predicted_values
+})
+
+# Crear el plot
+plt.figure(figsize=(10, 5))
+plt.plot(df_plot['Real'], label='Real Values')
+plt.plot(df_plot['Predicted'], label='Predictions', linestyle='--')
+plt.title('Comparison of Real and Predicted Values')
+plt.xlabel('Time')
+plt.ylabel('Value')
+plt.legend()
+plt.grid(True)
 
 # Mostrar el plot en Streamlit
-st.pyplot(fig)
+st.pyplot(plt)
