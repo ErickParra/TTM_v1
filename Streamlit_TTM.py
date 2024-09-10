@@ -193,10 +193,10 @@ finetune_forecast_trainer_new = Trainer(
 )
 
 
-# predictions = finetune_forecast_trainer_new.predict(df_cleaned)
+predictions = finetune_forecast_trainer_new.predict(df_cleaned)
 
-# st.write("Predictions 1:")
-# st.write(predictions)
+st.write("Predictions 1:")
+st.write(predictions)
 
 
 
