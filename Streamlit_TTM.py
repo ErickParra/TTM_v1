@@ -36,11 +36,10 @@ def get_data_from_databricks():
         AND Date_ReadTime BETWEEN '{time_48_hours_ago_str}' AND '{time_now_str}'
     """
     df = pd.read_sql(query, connection)
-
+    return df
 
 
 # Obtener datos en tiempo real desde Databricks y preprocesarlos
-#df_cleaned = get_data_from_databricks()
+df_cleaned = get_data_from_databricks()
 st.write("Datos limpios y procesados:")
-st.write(df)  # Esta línea mostrará el dataframe en la aplicación Streamlit
-
+st.write(df_cleaned)  # Esta línea mostrará el dataframe en la aplicación Streamlit
