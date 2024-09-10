@@ -201,8 +201,8 @@ st.write("Model Fine-Tunning:")
 st.write(model)
 
 
-st.write("Data Normalizada:")
-st.write(df_scaled)
+#st.write("Data Normalizada:")
+#st.write(df_scaled)
 
 
 
