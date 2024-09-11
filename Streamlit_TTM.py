@@ -319,37 +319,3 @@ df_results = pd.DataFrame({
 
 # Mostrar en Streamlit
 st.write("Comparación de Valores Reales y Predicciones", df_results)
-
-
-
-
-
-# # window = 150
-
-# # observed_df = pd.DataFrame(torch.cat([test_dataset[window]['past_values'], test_dataset[window]['future_values']]))
-# # predictions_df = pd.DataFrame(predictions_test[0][0][window])
-# # predictions_df.index += 512
-# # st.write(predictions_df)
-
-
-
-
-
-
-# # Configurar tamaño de figura
-# plt.figure(figsize=(10, 5))
-
-# # Trazar valores reales
-# plt.plot(df_results.index, df_results['Valores Reales'], label='Valores Reales', color='blue')
-
-# # Trazar predicciones
-# plt.plot(df_results.index, df_results['Predicciones'], label='Predicciones', color='red', linestyle='--')
-
-# # Añadir título y etiquetas
-# plt.title('Comparación de Valores Reales y Predicciones')
-# plt.xlabel('Índice')
-# plt.ylabel('Valor')
-# plt.legend()
-
-# # Mostrar gráfico en Streamlit
-# st.pyplot(plt)
