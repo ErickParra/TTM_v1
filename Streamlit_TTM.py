@@ -220,7 +220,7 @@ tsp = TimeSeriesPreprocessor(
     **column_specifiers,
     context_length=context_length,
     prediction_length=forecast_length,
-    scaling=True,
+    scaling=False,
     encode_categorical=False,
     scaler_type="standard",
 )
