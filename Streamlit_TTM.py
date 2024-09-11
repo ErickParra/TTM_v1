@@ -270,9 +270,16 @@ def long_horizon_mse(dataset, predictions):
 st.write(long_horizon_mse(valid_dataset, predictions_validation))
 
 
+zeroshot_trainer.evaluate(test_dataset)
+st.write("Test Loss Evaluation:")
+st.write(zeroshot_trainer.evaluate(test_dataset))
+
+st.write(long_horizon_mse(test_dataset, predictions_test))
 
 
 
+plot_predictions(model= zeroshot_trainer.model, dset=test_dataset, plot_dir="output", plot_prefix="test_zeroshot", channel=8)
+st.write(plot_predictions(model= zeroshot_trainer.model, dset=test_dataset, plot_dir="output", plot_prefix="test_zeroshot", channel=8))
 
 
 
