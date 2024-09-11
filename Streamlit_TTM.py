@@ -278,13 +278,6 @@ st.write(long_horizon_mse(test_dataset, predictions_test))
 
 
 
-window = 150
-
-observed_df = pd.DataFrame(torch.cat([test_dataset[window]['past_values'], test_dataset[window]['future_values']]))
-predictions_df = pd.DataFrame(predictions_test[0][0][window])
-predictions_df.index += 512
-st.write(predictions_df)
-
 
 
 # Supongamos que `test_dataset` puede proporcionarte los valores reales y que `predictions_test` contiene las predicciones.
@@ -299,6 +292,22 @@ df_results = pd.DataFrame({
 
 # Mostrar en Streamlit
 st.write("Comparación de Valores Reales y Predicciones", df_results)
+
+
+
+
+
+
+
+window = 150
+
+observed_df = pd.DataFrame(torch.cat([test_dataset[window]['past_values'], test_dataset[window]['future_values']]))
+predictions_df = pd.DataFrame(predictions_test[0][0][window])
+predictions_df.index += 512
+st.write(predictions_df)
+
+
+
 
 
 
