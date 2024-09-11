@@ -331,22 +331,7 @@ st.write("Predicciones:", predictions_df)
 
 
 
-# import matplotlib.pyplot as plt
 
-# # Asumiendo que 'observed_df' contiene los valores reales y 'predictions_df' las predicciones
-# real_values = observed_df.values.flatten()  # Aplanar si es necesario
-# predicted_values = predictions_df.values.flatten()
-
-# # Crear gráfico
-# plt.figure(figsize=(12, 6))
-# plt.plot(real_values, label='Valores Reales', color='blue')
-# plt.plot(range(len(real_values), len(real_values) + len(predicted_values)), predicted_values, label='Predicciones', color='orange', linestyle='--')
-# plt.title('Comparación de Valores Reales vs Predicciones')
-# plt.xlabel('Índice de Tiempo')
-# plt.ylabel('Valor')
-# plt.legend()
-# plt.grid(True)
-# st.pyplot()
 
 
 
@@ -379,3 +364,11 @@ for i in range(num_columns):
 
 plt.tight_layout()  # Ajustar el layout
 st.pyplot()
+
+plot_predictions(model=zeroshot_trainer.model, dset=test_dataset, plot_dir="output", plot_prefix="test_zeroshot", channel=8)
+
+# Para mostrar una imagen guardada
+image_path = 'output/test_zeroshot_some_identifier.png'  # Ajusta el nombre del archivo según cómo se guarde
+st.image(image_path, caption='Visualización de Predicciones')
+
+st.write(plot_predictions(model= zeroshot_trainer.model, dset=test_dataset, plot_dir="output", plot_prefix="test_zeroshot", channel=8))
