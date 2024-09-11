@@ -45,7 +45,7 @@ def get_data_from_databricks():
     last_time = pd.to_datetime(last_time_df['last_time'].iloc[0])
 
     # Calcular las últimas 48 horas desde el último tiempo registrado
-    time_48_hours_ago = last_time - timedelta(hours=70)
+    time_48_hours_ago = last_time - timedelta(hours=65)
 
     # Formatear las fechas para SQL
     last_time_str = last_time.strftime('%Y-%m-%d %H:%M:%S')
@@ -140,6 +140,7 @@ df_cleaned = df_resampled.drop(columns=[
 st.write("Datos Limpiado:")
 st.write(df_cleaned)
 
+st.write(df.columns)
 
 
 # Suponiendo que df_cleaned es tu DataFrame y tiene múltiples columnas de series temporales
