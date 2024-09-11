@@ -287,37 +287,15 @@ st.write("Ejemplo de los primeros elementos de test_dataset:", test_dataset[0])
 
 
 
+window = 150
+
+observed_df = pd.DataFrame(torch.cat([test_dataset[window]['past_values'], test_dataset[window]['future_values']]))
+predictions_df = pd.DataFrame(predictions_test[0][0][window])
+predictions_df.index += 512
+t.write("predictions_df")
+st.write(predictions_df)
 
 
-# Asumiendo que 'predictions_test' ya contiene las predicciones obtenidas del método predict
-predictions = [item.numpy() for item in predictions_test.predictions]
-
-# Extracción de valores reales desde test_dataset
-real_values = np.array([item['future_values'].numpy() for item in test_dataset])
-
-# Asegurando que ambos sean numpy arrays para poder aplanarlos y comparar
-real_values_flat = real_values.flatten()
-predictions_flat = np.concatenate(predictions).flatten()
-
-# Crear DataFrame para visualización
-df_results = pd.DataFrame({
-    'Valores Reales': real_values_flat,
-    'Predicciones': predictions_flat
-})
-
-# Visualización en Streamlit
-st.write("Comparación de Valores Reales y Predicciones", df_results)
-
-# Graficar resultados para comparación visual
-plt.figure(figsize=(12, 6))
-plt.plot(real_values_flat, label='Valores Reales')
-plt.plot(predictions_flat, label='Predicciones', linestyle='--')
-plt.title('Comparación de Valores Reales vs Predicciones')
-plt.xlabel('Tiempo')
-plt.ylabel('Valores')
-plt.legend()
-plt.grid(True)
-st.pyplot()
 
 
 
