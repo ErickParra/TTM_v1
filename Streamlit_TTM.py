@@ -333,23 +333,23 @@ st.pyplot()
 
 
 
-# Asegúrate de que 'predictions_test' tiene la estructura correcta
-st.write("Estructura de predictions_test:", predictions_test)
-predictions = [item.numpy() for item in predictions_test.predictions]
+# # Asegúrate de que 'predictions_test' tiene la estructura correcta
+# st.write("Estructura de predictions_test:", predictions_test)
+# predictions = [item.numpy() for item in predictions_test.predictions]
 
-# Suponiendo que necesitas acceder a 'future_values' de cada muestra en test_dataset para obtener los valores reales
-real_values = [sample['future_values'].numpy() for sample in test_dataset]
-# Debido a que 'real_values' y 'predictions' pueden ser listas de arrays, podrías necesitar aplanarlos
-real_values_flat = np.concatenate(real_values).flatten()
-predictions_flat = np.concatenate(predictions).flatten()
+# # Suponiendo que necesitas acceder a 'future_values' de cada muestra en test_dataset para obtener los valores reales
+# real_values = [sample['future_values'].numpy() for sample in test_dataset]
+# # Debido a que 'real_values' y 'predictions' pueden ser listas de arrays, podrías necesitar aplanarlos
+# real_values_flat = np.concatenate(real_values).flatten()
+# predictions_flat = np.concatenate(predictions).flatten()
 
-# Crear DataFrame para comparar
-df_results = pd.DataFrame({
-    'Valores Reales': real_values_flat,
-    'Predicciones': predictions_flat
-})
+# # Crear DataFrame para comparar
+# df_results = pd.DataFrame({
+#     'Valores Reales': real_values_flat,
+#     'Predicciones': predictions_flat
+# })
 
-# Mostrar en Streamlit
-st.write("Comparación de Valores Reales y Predicciones", df_results)
+# # Mostrar en Streamlit
+# st.write("Comparación de Valores Reales y Predicciones", df_results)
 
 
