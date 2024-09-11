@@ -280,6 +280,12 @@ st.write(long_horizon_mse(test_dataset, predictions_test))
 
 
 
+# Imprime el tipo y tal vez algunos elementos de test_dataset para entender su estructura
+st.write("Tipo de test_dataset:", type(test_dataset))
+st.write("Ejemplo de los primeros elementos de test_dataset:", test_dataset[0])
+
+
+
 # Asumiendo que `real_values` y `predictions` son arrays que has extraído correctamente
 real_values = test_dataset.targets.numpy()  # Ajusta esto según cómo puedes obtener los valores reales
 predictions = predictions_test.predictions.squeeze()  # Ajusta según la estructura de tus predicciones
