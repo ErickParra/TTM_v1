@@ -278,16 +278,27 @@ st.write(long_horizon_mse(test_dataset, predictions_test))
 
 
 
-plot_predictions(model= zeroshot_trainer.model, dset=test_dataset, plot_dir="output", plot_prefix="test_zeroshot", channel=8)
-st.write(plot_predictions(model= zeroshot_trainer.model, dset=test_dataset, plot_dir="output", plot_prefix="test_zeroshot", channel=8))
-
-
 window = 150
 
 observed_df = pd.DataFrame(torch.cat([test_dataset[window]['past_values'], test_dataset[window]['future_values']]))
 predictions_df = pd.DataFrame(predictions_test[0][0][window])
 predictions_df.index += 512
 st.write(predictions_df)
+
+
+
+# Supongamos que `test_dataset` puede proporcionarte los valores reales y que `predictions_test` contiene las predicciones.
+real_values = test_dataset.targets.numpy()  # Ajusta esto a cómo puedas obtener los valores reales.
+predictions = predictions_test.predictions  # Esto asume que la estructura incluye un campo 'predictions'.
+
+# Crear DataFrame
+df_results = pd.DataFrame({
+    'Valores Reales': real_values.flatten(),  # Asegúrate de que las dimensiones coincidan.
+    'Predicciones': predictions.flatten()     # Puede necesitar ajustar .flatten() dependiendo de la forma de tus datos.
+})
+
+# Mostrar en Streamlit
+st.write("Comparación de Valores Reales y Predicciones", df_results)
 
 
 
