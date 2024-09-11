@@ -370,7 +370,7 @@ st.pyplot()
 
 
 # Entrena el preprocesador con los datos de entrenamiento
-preprocessor.train(train_df)
+TimeSeriesPreprocessor.train(train_df)
 
 # Después de obtener predicciones escaladas del modelo
 # Aquí necesitarías transformar tus predicciones a un DataFrame si aún no lo están
@@ -378,7 +378,7 @@ preprocessor.train(train_df)
 scaled_predictions_df = predictions_df
 
 # Aplica la función de desescalamiento para convertir predicciones escaladas a su escala original
-real_scale_predictions_df = preprocessor.inverse_scale_targets(scaled_predictions_df)
+real_scale_predictions_df = TimeSeriesPreprocessor.inverse_scale_targets(scaled_predictions_df)
 
 
 import matplotlib.pyplot as plt
