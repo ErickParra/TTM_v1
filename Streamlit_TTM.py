@@ -292,14 +292,40 @@ st.write(predictions_df)
 
 
 # # Supongamos que `test_dataset` puede proporcionarte los valores reales y que `predictions_test` contiene las predicciones.
-# real_values = test_dataset.targets.numpy()  # Ajusta esto a cómo puedas obtener los valores reales.
-# predictions = predictions_test.predictions  # Esto asume que la estructura incluye un campo 'predictions'.
+real_values = test_dataset.targets.numpy()  # Ajusta esto a cómo puedas obtener los valores reales.
+predictions = predictions_test.predictions  # Esto asume que la estructura incluye un campo 'predictions'.
 
-# # Crear DataFrame
-# df_results = pd.DataFrame({
-#     'Valores Reales': real_values.flatten(),  # Asegúrate de que las dimensiones coincidan.
-#     'Predicciones': predictions.flatten()     # Puede necesitar ajustar .flatten() dependiendo de la forma de tus datos.
-# })
+# Crear DataFrame
+df_results = pd.DataFrame({
+     'Valores Reales': real_values.flatten(),  # Asegúrate de que las dimensiones coincidan.
+     'Predicciones': predictions.flatten()     # Puede necesitar ajustar .flatten() dependiendo de la forma de tus datos.
+})
 
-# # Mostrar en Streamlit
-# st.write("Comparación de Valores Reales y Predicciones", df_results)
+# Mostrar en Streamlit
+st.write("Comparación de Valores Reales y Predicciones", df_results)
+
+import matplotlib.pyplot as plt
+
+# Suponiendo que predictions_test y real_values ya están definidos
+# Aquí, predicciones y valores reales necesitan estar correctamente dimensionados
+
+# Ejemplo de cómo podrían estar organizados tus datos
+# real_values = array de los valores reales de las características del test set
+# predictions = tus predicciones para el test set
+
+# Deberás ajustar estas líneas según cómo estén estructurados tus datos exactamente
+real_values = test_dataset.targets.numpy()  # Asegúrate de que test_dataset tenga una propiedad .targets o ajusta conforme a tu dataset
+predictions = predictions_test[0]  # Ajusta según el output de tu modelo
+
+# Trazar las predicciones y los valores reales
+plt.figure(figsize=(10, 5))
+plt.plot(real_values[0], label='Valores Reales')
+plt.plot(predictions[0], label='Predicciones', linestyle='--')
+plt.title('Comparación de Valores Reales y Predicciones')
+plt.xlabel('Tiempo')
+plt.ylabel('Valor')
+plt.legend()
+plt.grid(True)
+
+# Mostrar el gráfico en Streamlit
+st.pyplot(plt)
