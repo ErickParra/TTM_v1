@@ -313,7 +313,22 @@ st.write("Predicciones:", predictions_df)
 
 
 
+import matplotlib.pyplot as plt
 
+# Asumiendo que 'observed_df' contiene los valores reales y 'predictions_df' las predicciones
+real_values = observed_df.values.flatten()  # Aplanar si es necesario
+predicted_values = predictions_df.values.flatten()
+
+# Crear gráfico
+plt.figure(figsize=(12, 6))
+plt.plot(real_values, label='Valores Reales', color='blue')
+plt.plot(range(len(real_values), len(real_values) + len(predicted_values)), predicted_values, label='Predicciones', color='orange', linestyle='--')
+plt.title('Comparación de Valores Reales vs Predicciones')
+plt.xlabel('Índice de Tiempo')
+plt.ylabel('Valor')
+plt.legend()
+plt.grid(True)
+st.pyplot()
 
 
 
