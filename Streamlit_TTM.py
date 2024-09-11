@@ -282,7 +282,7 @@ plot_predictions(model= zeroshot_trainer.model, dset=test_dataset, plot_dir="out
 st.write(plot_predictions(model= zeroshot_trainer.model, dset=test_dataset, plot_dir="output", plot_prefix="test_zeroshot", channel=8))
 
 
-window = 20
+window = 150
 
 observed_df = pd.DataFrame(torch.cat([test_dataset[window]['past_values'], test_dataset[window]['future_values']]))
 predictions_df = pd.DataFrame(predictions_test[0][0][window])
