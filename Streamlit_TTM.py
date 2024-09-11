@@ -291,20 +291,20 @@ st.write(predictions_df)
 
 
 
-# Configurar tamaño de figura
-plt.figure(figsize=(10, 5))
+# # Configurar tamaño de figura
+# plt.figure(figsize=(10, 5))
 
-# Trazar valores reales
-plt.plot(df_results.index, df_results['Valores Reales'], label='Valores Reales', color='blue')
+# # Trazar valores reales
+# plt.plot(df_results.index, df_results['Valores Reales'], label='Valores Reales', color='blue')
 
-# Trazar predicciones
-plt.plot(df_results.index, df_results['Predicciones'], label='Predicciones', color='red', linestyle='--')
+# # Trazar predicciones
+# plt.plot(df_results.index, df_results['Predicciones'], label='Predicciones', color='red', linestyle='--')
 
-# Añadir título y etiquetas
-plt.title('Comparación de Valores Reales y Predicciones')
-plt.xlabel('Índice')
-plt.ylabel('Valor')
-plt.legend()
+# # Añadir título y etiquetas
+# plt.title('Comparación de Valores Reales y Predicciones')
+# plt.xlabel('Índice')
+# plt.ylabel('Valor')
+# plt.legend()
 
-# Mostrar gráfico en Streamlit
-st.pyplot(plt)
+# # Mostrar gráfico en Streamlit
+# st.pyplot(plt)
