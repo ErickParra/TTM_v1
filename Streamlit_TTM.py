@@ -28,7 +28,6 @@ server = st.secrets["server"]
 http = st.secrets["http"]
 token = st.secrets["token"]
 
-# Conexión a Databricks y preprocesamiento
 def get_data_from_databricks():
     connection = sql.connect(
         server_hostname=server,
@@ -36,12 +35,20 @@ def get_data_from_databricks():
         access_token=token
     )
 
-    # Obtener el tiempo actual y calcular las últimas 48 horas
-    time_now = datetime.now()
-    time_48_hours_ago = time_now - timedelta(hours=55)
+    # Consulta para obtener el último tiempo registrado
+    query_last_time = """
+        SELECT MAX(Date_ReadTime) as last_time
+        FROM hive_metastore.curated_cen_minecare_eastus2.oemdataprovider_oemparameterexternalview_hot
+        WHERE EquipmentName = 'PA26'
+    """
+    last_time_df = pd.read_sql(query_last_time, connection)
+    last_time = pd.to_datetime(last_time_df['last_time'].iloc[0])
+
+    # Calcular las últimas 48 horas desde el último tiempo registrado
+    time_48_hours_ago = last_time - timedelta(hours=48)
 
     # Formatear las fechas para SQL
-    time_now_str = time_now.strftime('%Y-%m-%d %H:%M:%S')
+    last_time_str = last_time.strftime('%Y-%m-%d %H:%M:%S')
     time_48_hours_ago_str = time_48_hours_ago.strftime('%Y-%m-%d %H:%M:%S')
 
     # Ejecutar consulta SQL para obtener los datos de las últimas 48 horas
@@ -49,7 +56,7 @@ def get_data_from_databricks():
         SELECT * 
         FROM hive_metastore.curated_cen_minecare_eastus2.oemdataprovider_oemparameterexternalview_hot
         WHERE EquipmentName = 'PA26' 
-        AND Date_ReadTime BETWEEN '{time_48_hours_ago_str}' AND '{time_now_str}'
+        AND Date_ReadTime BETWEEN '{time_48_hours_ago_str}' AND '{last_time_str}'
     """
     df = pd.read_sql(query, connection)
     return df
