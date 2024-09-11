@@ -286,24 +286,35 @@ st.write("Ejemplo de los primeros elementos de test_dataset:", test_dataset[0])
 
 
 
-# Crear DataFrame para comparar los valores reales y las predicciones
+
+
+
+# Asumiendo que 'predictions_test' ya contiene las predicciones obtenidas del método predict
+predictions = [item.numpy() for item in predictions_test.predictions]
+
+# Extracción de valores reales desde test_dataset
+real_values = np.array([item['future_values'].numpy() for item in test_dataset])
+
+# Asegurando que ambos sean numpy arrays para poder aplanarlos y comparar
+real_values_flat = real_values.flatten()
+predictions_flat = np.concatenate(predictions).flatten()
+
+# Crear DataFrame para visualización
 df_results = pd.DataFrame({
-    'Valores Reales': real_values.flatten(),  # Asegúrate de que las dimensiones coincidan con las predicciones
-    'Predicciones': predictions.flatten()     # Ajusta según la forma de tus datos
+    'Valores Reales': real_values_flat,
+    'Predicciones': predictions_flat
 })
 
-# Mostrar en Streamlit
+# Visualización en Streamlit
 st.write("Comparación de Valores Reales y Predicciones", df_results)
 
-
-
-# Visualizar los resultados en un gráfico
-plt.figure(figsize=(10, 5))
-plt.plot(df_results['Valores Reales'], label='Valores Reales')
-plt.plot(df_results['Predicciones'], label='Predicciones', linestyle='--')
-plt.title('Comparación de Valores Reales y Predicciones')
-plt.xlabel('Índice')
-plt.ylabel('Valor')
+# Graficar resultados para comparación visual
+plt.figure(figsize=(12, 6))
+plt.plot(real_values_flat, label='Valores Reales')
+plt.plot(predictions_flat, label='Predicciones', linestyle='--')
+plt.title('Comparación de Valores Reales vs Predicciones')
+plt.xlabel('Tiempo')
+plt.ylabel('Valores')
 plt.legend()
 plt.grid(True)
 st.pyplot()
