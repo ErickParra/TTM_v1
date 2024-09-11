@@ -236,8 +236,35 @@ st.write(predictions_validation)
 predictions_test[0][0].shape
 st.write(predictions_test[0][0].shape)
 
+#Validation Loss Evaluation
 zeroshot_trainer.evaluate(valid_dataset)
 
+from sklearn.metrics import mean_squared_error as mse, mean_absolute_error as mae
+# let's make our own evaluation to convince ourselves that evaluate() works as expected:
+
+def long_horizon_mse(dataset, predictions):
+
+    mses = []
+    maes = []
+
+    predictions_size = predictions[0][0].shape[0]
+
+    for i in range(predictions_size):
+        mse_one_horizon = mse(dataset[i]['future_values'].numpy(), predictions[0][0][i]) #if you use sklearn's mse
+        mae_one_horizon = mae(dataset[i]['future_values'].numpy(), predictions[0][0][i]) #if you use sklearn's mae
+
+        #mse_one_horizon = np.mean((dataset[i]['future_values'].numpy() - predictions[0][0][i])**2)
+        #mae_one_horizon = np.mean(np.abs(dataset[i]['future_values'].numpy() - predictions[0][0][i]))
+
+        mses.append(mse_one_horizon)
+        maes.append(mae_one_horizon)
+
+    data = pd.DataFrame({'mse':[np.array(mses).mean()], 'mae':[np.array(maes).mean()]})
+
+    return data
+
+
+st.write(long_horizon_mse(valid_dataset, predictions_validation))
 
 
 
