@@ -38,7 +38,7 @@ def get_data_from_databricks():
 
     # Obtener el tiempo actual y calcular las últimas 48 horas
     time_now = datetime.now()
-    time_48_hours_ago = time_now - timedelta(hours=75)
+    time_48_hours_ago = time_now - timedelta(hours=70)
 
     # Formatear las fechas para SQL
     time_now_str = time_now.strftime('%Y-%m-%d %H:%M:%S')
@@ -300,13 +300,14 @@ st.write(predictions_df)
 
 
 
+
+
 # Asegúrate de que 'predictions_test' tiene la estructura correcta
 st.write("Estructura de predictions_test:", predictions_test)
 predictions = [item.numpy() for item in predictions_test.predictions]
 
 # Suponiendo que necesitas acceder a 'future_values' de cada muestra en test_dataset para obtener los valores reales
 real_values = [sample['future_values'].numpy() for sample in test_dataset]
-
 # Debido a que 'real_values' y 'predictions' pueden ser listas de arrays, podrías necesitar aplanarlos
 real_values_flat = np.concatenate(real_values).flatten()
 predictions_flat = np.concatenate(predictions).flatten()
@@ -319,3 +320,5 @@ df_results = pd.DataFrame({
 
 # Mostrar en Streamlit
 st.write("Comparación de Valores Reales y Predicciones", df_results)
+
+
