@@ -300,13 +300,16 @@ st.write("Ejemplo de los primeros elementos de test_dataset:", test_dataset[0])
 
 
 
-window = 150
+# Establecer window al último índice disponible en test_dataset
+window = len(test_dataset) - 1
 
+# Ahora window siempre usará el último conjunto de datos disponible para la predicción
 observed_df = pd.DataFrame(torch.cat([test_dataset[window]['past_values'], test_dataset[window]['future_values']]))
 predictions_df = pd.DataFrame(predictions_test[0][0][window])
-predictions_df.index += 512
-st.write("predictions_df")
-st.write(predictions_df)
+predictions_df.index += len(test_dataset[window]['past_values'])  # Ajustar el índice para que continúe después de los valores pasados
+st.write("Datos observados y predicciones para el último conjunto de datos disponible:")
+st.write("Observados:", observed_df)
+st.write("Predicciones:", predictions_df)
 
 
 
