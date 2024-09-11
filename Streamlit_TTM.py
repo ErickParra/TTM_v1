@@ -286,20 +286,27 @@ st.write("Ejemplo de los primeros elementos de test_dataset:", test_dataset[0])
 
 
 
-# Asumiendo que `real_values` y `predictions` son arrays que has extraído correctamente
-real_values = test_dataset.targets.numpy()  # Ajusta esto según cómo puedes obtener los valores reales
-predictions = predictions_test.predictions.squeeze()  # Ajusta según la estructura de tus predicciones
-
-# Crear DataFrame
-results_df = pd.DataFrame({
-    "Real Values": real_values.flatten(),  # Usa flatten() si es necesario para coincidir las formas
-    "Predictions": predictions.flatten()
+# Crear DataFrame para comparar los valores reales y las predicciones
+df_results = pd.DataFrame({
+    'Valores Reales': real_values.flatten(),  # Asegúrate de que las dimensiones coincidan con las predicciones
+    'Predicciones': predictions.flatten()     # Ajusta según la forma de tus datos
 })
 
-# Mostrar DataFrame en Streamlit
-st.dataframe(results_df)
+# Mostrar en Streamlit
+st.write("Comparación de Valores Reales y Predicciones", df_results)
 
 
+
+# Visualizar los resultados en un gráfico
+plt.figure(figsize=(10, 5))
+plt.plot(df_results['Valores Reales'], label='Valores Reales')
+plt.plot(df_results['Predicciones'], label='Predicciones', linestyle='--')
+plt.title('Comparación de Valores Reales y Predicciones')
+plt.xlabel('Índice')
+plt.ylabel('Valor')
+plt.legend()
+plt.grid(True)
+st.pyplot()
 
 
 
