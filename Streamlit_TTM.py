@@ -313,43 +313,51 @@ st.write("Predicciones:", predictions_df)
 
 
 
+# import matplotlib.pyplot as plt
+
+# # Asumiendo que 'observed_df' contiene los valores reales y 'predictions_df' las predicciones
+# real_values = observed_df.values.flatten()  # Aplanar si es necesario
+# predicted_values = predictions_df.values.flatten()
+
+# # Crear gráfico
+# plt.figure(figsize=(12, 6))
+# plt.plot(real_values, label='Valores Reales', color='blue')
+# plt.plot(range(len(real_values), len(real_values) + len(predicted_values)), predicted_values, label='Predicciones', color='orange', linestyle='--')
+# plt.title('Comparación de Valores Reales vs Predicciones')
+# plt.xlabel('Índice de Tiempo')
+# plt.ylabel('Valor')
+# plt.legend()
+# plt.grid(True)
+# st.pyplot()
+
+
+
 import matplotlib.pyplot as plt
 
-# Asumiendo que 'observed_df' contiene los valores reales y 'predictions_df' las predicciones
-real_values = observed_df.values.flatten()  # Aplanar si es necesario
-predicted_values = predictions_df.values.flatten()
+# Suponiendo que cada columna en 'observed_df' y 'predictions_df' representa un canal diferente
+num_columns = observed_df.shape[1]  # Número de columnas/canales
 
-# Crear gráfico
-plt.figure(figsize=(12, 6))
-plt.plot(real_values, label='Valores Reales', color='blue')
-plt.plot(range(len(real_values), len(real_values) + len(predicted_values)), predicted_values, label='Predicciones', color='orange', linestyle='--')
-plt.title('Comparación de Valores Reales vs Predicciones')
-plt.xlabel('Índice de Tiempo')
-plt.ylabel('Valor')
-plt.legend()
-plt.grid(True)
+# Crear una figura y un conjunto de subtramas
+fig, axes = plt.subplots(num_columns, 1, figsize=(12, 6 * num_columns))  # Ajusta el tamaño de la figura según el número de canales
+
+for i in range(num_columns):
+    real_values = observed_df.iloc[:, i].values  # Valores reales del i-ésimo canal
+    predicted_values = predictions_df.iloc[:, i].values  # Predicciones del i-ésimo canal
+    time_index = range(len(real_values))
+    pred_index = range(len(real_values), len(real_values) + len(predicted_values))
+    
+    if num_columns > 1:
+        ax = axes[i]
+    else:
+        ax = axes
+
+    ax.plot(time_index, real_values, label='Valores Reales', color='blue')
+    ax.plot(pred_index, predicted_values, label='Predicciones', color='orange', linestyle='--')
+    ax.set_title(f'Canal {i + 1}')
+    ax.set_xlabel('Índice de Tiempo')
+    ax.set_ylabel('Valor')
+    ax.legend()
+    ax.grid(True)
+
+plt.tight_layout()  # Ajustar el layout
 st.pyplot()
-
-
-
-
-# # Asegúrate de que 'predictions_test' tiene la estructura correcta
-# st.write("Estructura de predictions_test:", predictions_test)
-# predictions = [item.numpy() for item in predictions_test.predictions]
-
-# # Suponiendo que necesitas acceder a 'future_values' de cada muestra en test_dataset para obtener los valores reales
-# real_values = [sample['future_values'].numpy() for sample in test_dataset]
-# # Debido a que 'real_values' y 'predictions' pueden ser listas de arrays, podrías necesitar aplanarlos
-# real_values_flat = np.concatenate(real_values).flatten()
-# predictions_flat = np.concatenate(predictions).flatten()
-
-# # Crear DataFrame para comparar
-# df_results = pd.DataFrame({
-#     'Valores Reales': real_values_flat,
-#     'Predicciones': predictions_flat
-# })
-
-# # Mostrar en Streamlit
-# st.write("Comparación de Valores Reales y Predicciones", df_results)
-
-
