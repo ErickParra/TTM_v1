@@ -291,44 +291,20 @@ st.write(predictions_df)
 
 
 
-# # Supongamos que `test_dataset` puede proporcionarte los valores reales y que `predictions_test` contiene las predicciones.
-real_values = test_dataset.targets.numpy()  # Ajusta esto a cómo puedas obtener los valores reales.
-predictions = predictions_test.predictions  # Esto asume que la estructura incluye un campo 'predictions'.
+# Configurar tamaño de figura
+plt.figure(figsize=(10, 5))
 
-# Crear DataFrame
-df_results = pd.DataFrame({
-     'Valores Reales': real_values.flatten(),  # Asegúrate de que las dimensiones coincidan.
-     'Predicciones': predictions.flatten()     # Puede necesitar ajustar .flatten() dependiendo de la forma de tus datos.
-})
+# Trazar valores reales
+plt.plot(df_results.index, df_results['Valores Reales'], label='Valores Reales', color='blue')
 
-# Mostrar en Streamlit
-st.write("Comparación de Valores Reales y Predicciones", df_results)
+# Trazar predicciones
+plt.plot(df_results.index, df_results['Predicciones'], label='Predicciones', color='red', linestyle='--')
 
+# Añadir título y etiquetas
+plt.title('Comparación de Valores Reales y Predicciones')
+plt.xlabel('Índice')
+plt.ylabel('Valor')
+plt.legend()
 
-# Supongamos que 'test_dataset' y 'predictions_test' están definidos correctamente.
-window = 150
-
-# Creación de DataFrames de pandas a partir de tensores de PyTorch
-observed_df = pd.DataFrame(torch.cat([test_dataset[window]['past_values'], test_dataset[window]['future_values']]))
-predictions_df = pd.DataFrame(predictions_test[0][0][window])
-predictions_df.index += 512  # Ajustar el índice para alinearlo con las observaciones futuras
-
-# Configurar tamaño de la figura y realizar múltiples subplots
-fig, axs = plt.subplots(21, 1, figsize=(10, 42))  # Ajusta el número de plots según tus necesidades
-
-for i in range(21):  # Asumiendo que tienes 21 series de tiempo
-    axs[i].plot(observed_df.loc[0:512, i], label="Past Values")
-    axs[i].plot(observed_df.loc[512:, i], label="Observed Future Values")
-    axs[i].plot(predictions_df.loc[512:, i], label="Predicted Values")
-
-    axs[i].legend()
-    axs[i].set_xlabel("Time")
-    axs[i].set_ylabel("Value")
-    axs[i].set_title("Time Series {}".format(i+1))
-    axs[i].grid(True)
-
-# Ajustar layout para mejor visualización
-plt.tight_layout()
-
-# Mostrar el plot en Streamlit
-st.pyplot(fig)
+# Mostrar gráfico en Streamlit
+st.pyplot(plt)
