@@ -38,7 +38,7 @@ def get_data_from_databricks():
 
     # Obtener el tiempo actual y calcular las últimas 48 horas
     time_now = datetime.now()
-    time_48_hours_ago = time_now - timedelta(hours=65)
+    time_48_hours_ago = time_now - timedelta(hours=55)
 
     # Formatear las fechas para SQL
     time_now_str = time_now.strftime('%Y-%m-%d %H:%M:%S')
