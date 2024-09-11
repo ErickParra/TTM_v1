@@ -163,6 +163,7 @@ st.write(valid_rows)
 st.write("Test:")
 st.write(test_rows)
 
+
 if 'ReadTime' not in df_cleaned.columns:
     df_cleaned.reset_index(inplace=True)
 
@@ -202,6 +203,10 @@ train_dataset, valid_dataset, test_dataset = tsp.get_datasets(
     df_cleaned, split_config, fewshot_fraction=fewshot_fraction, fewshot_location="first"
 )
 #print(f"Data lengths: train = {len(train_dataset)}, val = {len(valid_dataset)}, test = {len(test_dataset)}")
+
+
+st.write("Data lengths:")
+st.write(print(f"Data lengths: train = {len(train_dataset)}, val = {len(valid_dataset)}, test = {len(test_dataset)}"))
 
 zeroshot_model = TinyTimeMixerForPrediction.from_pretrained("ibm/TTM", revision=TTM_MODEL_REVISION)
 
