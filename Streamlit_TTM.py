@@ -140,7 +140,7 @@ df_cleaned = df_resampled.drop(columns=[
 st.write("Datos Limpiado:")
 st.write(df_cleaned)
 
-st.write(df.columns)
+st.write(df_cleaned.columns)
 
 
 # Suponiendo que df_cleaned es tu DataFrame y tiene múltiples columnas de series temporales
