@@ -48,7 +48,7 @@ def get_data_from_databricks():
     query = f"""
         SELECT * 
         FROM hive_metastore.curated_cen_minecare_eastus2.oemdataprovider_oemparameterexternalview_hot
-        WHERE EquipmentName = 'PA26' 
+        WHERE EquipmentName = 'PA9' 
         AND Date_ReadTime BETWEEN '{time_48_hours_ago_str}' AND '{time_now_str}'
     """
     df = pd.read_sql(query, connection)
