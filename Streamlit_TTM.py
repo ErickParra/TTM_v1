@@ -140,6 +140,24 @@ df_cleaned = df_resampled.drop(columns=[
 st.write("Datos Limpiado:")
 st.write(df_cleaned)
 
+
+
+# Suponiendo que df_cleaned es tu DataFrame y tiene múltiples columnas de series temporales
+fig, axes = plt.subplots(nrows=len(df_cleaned.columns), ncols=1, figsize=(10, 20), sharex=True)
+
+for i, col in enumerate(df_cleaned.columns):
+    axes[i].plot(df_cleaned.index, df_cleaned[col], label=col)
+    axes[i].set_title(col)
+    axes[i].legend(loc='upper right')
+    axes[i].grid(True)
+
+# Ajusta automáticamente el layout de los plots
+plt.tight_layout()
+st.pyplot()
+
+
+
+
 TTM_MODEL_REVISION = "1024_96_v1"
 TTM_MODEL_REVISION = "main"
 
