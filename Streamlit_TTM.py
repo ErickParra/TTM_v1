@@ -238,6 +238,9 @@ st.write(predictions_test[0][0].shape)
 
 #Validation Loss Evaluation
 zeroshot_trainer.evaluate(valid_dataset)
+st.write("alidation Loss Evaluation:")
+st.write(zeroshot_trainer.evaluate(valid_dataset))
+
 
 from sklearn.metrics import mean_squared_error as mse, mean_absolute_error as mae
 # let's make our own evaluation to convince ourselves that evaluate() works as expected:
