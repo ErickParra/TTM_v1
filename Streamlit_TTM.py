@@ -292,7 +292,7 @@ window = 150
 observed_df = pd.DataFrame(torch.cat([test_dataset[window]['past_values'], test_dataset[window]['future_values']]))
 predictions_df = pd.DataFrame(predictions_test[0][0][window])
 predictions_df.index += 512
-t.write("predictions_df")
+st.write("predictions_df")
 st.write(predictions_df)
 
 
