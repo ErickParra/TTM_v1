@@ -38,7 +38,7 @@ def get_data_from_databricks():
 
     # Obtener el tiempo actual y calcular las últimas 48 horas
     time_now = datetime.now()
-    time_48_hours_ago = time_now - timedelta(hours=80)
+    time_48_hours_ago = time_now - timedelta(hours=75)
 
     # Formatear las fechas para SQL
     time_now_str = time_now.strftime('%Y-%m-%d %H:%M:%S')
@@ -299,18 +299,26 @@ st.write(predictions_df)
 
 
 
-# # Supongamos que `test_dataset` puede proporcionarte los valores reales y que `predictions_test` contiene las predicciones.
-# real_values = test_dataset.targets.numpy()  # Ajusta esto a cómo puedas obtener los valores reales.
-# predictions = predictions_test.predictions  # Esto asume que la estructura incluye un campo 'predictions'.
 
-# # Crear DataFrame
-# df_results = pd.DataFrame({
-#     'Valores Reales': real_values.flatten(),  # Asegúrate de que las dimensiones coincidan.
-#     'Predicciones': predictions.flatten()     # Puede necesitar ajustar .flatten() dependiendo de la forma de tus datos.
-# })
+# Asegúrate de que 'predictions_test' tiene la estructura correcta
+st.write("Estructura de predictions_test:", predictions_test)
+predictions = [item.numpy() for item in predictions_test.predictions]
 
-# # Mostrar en Streamlit
-# st.write("Comparación de Valores Reales y Predicciones", df_results)
+# Suponiendo que necesitas acceder a 'future_values' de cada muestra en test_dataset para obtener los valores reales
+real_values = [sample['future_values'].numpy() for sample in test_dataset]
+
+# Debido a que 'real_values' y 'predictions' pueden ser listas de arrays, podrías necesitar aplanarlos
+real_values_flat = np.concatenate(real_values).flatten()
+predictions_flat = np.concatenate(predictions).flatten()
+
+# Crear DataFrame para comparar
+df_results = pd.DataFrame({
+    'Valores Reales': real_values_flat,
+    'Predicciones': predictions_flat
+})
+
+# Mostrar en Streamlit
+st.write("Comparación de Valores Reales y Predicciones", df_results)
 
 
 
