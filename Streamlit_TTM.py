@@ -370,7 +370,7 @@ st.pyplot()
 
 
 # Entrena el preprocesador con los datos de entrenamiento
-TimeSeriesPreprocessor.train(train_df)
+TimeSeriesPreprocessor.train(train_dataset)
 
 # Después de obtener predicciones escaladas del modelo
 # Aquí necesitarías transformar tus predicciones a un DataFrame si aún no lo están
