@@ -240,53 +240,34 @@ zeroshot_trainer.evaluate(valid_dataset)
 
 
 
-#plot_predictions(model= zeroshot_trainer.model, dset=test_dataset, plot_dir="output", plot_prefix="test_zeroshot", channel=8)
-#st.write(plot_predictions(model= zeroshot_trainer.model, dset=test_dataset, plot_dir="output", plot_prefix="test_zeroshot", channel=8))
-OUT_DIR = "output"
-
-def zeroshot_eval(dataset_name, batch_size, context_length=512, forecast_length=96, prediction_filter_length=None):
-    # Get data
-    _, _, dset_test = load_dataset(
-        dataset_name=dataset_name,
-        context_length=context_length,
-        forecast_length=forecast_length,
-        fewshot_fraction=1.0,
-        dataset_root_path=OUT_DIR,
-    )
-
-
-zeroshot_eval(dataset_name=test_dataset, batch_size=64)
-st.write(zeroshot_eval(dataset_name=test_dataset, batch_size=64))
-#plot_predictions(model= zeroshot_trainer.model, dset=test_dataset, plot_dir=os.path.join(OUT_DIR, "ettm2"), plot_prefix="test_zeroshot", channel=8)
-
-
-# # Supongamos que 'test_dataset' y 'predictions_test' están definidos correctamente.
-# window = 96
-
-# # Creación de DataFrames de pandas a partir de tensores de PyTorch
-# observed_df = pd.DataFrame(torch.cat([test_dataset[window]['past_values'], test_dataset[window]['future_values']]))
-# predictions_df = pd.DataFrame(predictions_test[0][0][window])
-# predictions_df.index += 512  # Ajustar el índice para alinearlo con las observaciones futuras
-
-# # Configurar tamaño de la figura y realizar múltiples subplots
-# fig, axs = plt.subplots(21, 1, figsize=(10, 42))  # Ajusta el número de plots según tus necesidades
-
-# for i in range(21):  # Asumiendo que tienes 21 series de tiempo
-#     axs[i].plot(observed_df.loc[0:512, i], label="Past Values")
-#     axs[i].plot(observed_df.loc[512:, i], label="Observed Future Values")
-#     axs[i].plot(predictions_df.loc[512:, i], label="Predicted Values")
-
-#     axs[i].legend()
-#     axs[i].set_xlabel("Time")
-#     axs[i].set_ylabel("Value")
-#     axs[i].set_title("Time Series {}".format(i+1))
-#     axs[i].grid(True)
-
-# # Ajustar layout para mejor visualización
-# plt.tight_layout()
-
-# # Mostrar el plot en Streamlit
-# st.pyplot(fig)
 
 
 
+
+
+
+import matplotlib.pyplot as plt
+
+# Suponiendo que predictions_test y real_values ya están definidos
+# Aquí, predicciones y valores reales necesitan estar correctamente dimensionados
+
+# Ejemplo de cómo podrían estar organizados tus datos
+# real_values = array de los valores reales de las características del test set
+# predictions = tus predicciones para el test set
+
+# Deberás ajustar estas líneas según cómo estén estructurados tus datos exactamente
+real_values = test_dataset.targets.numpy()  # Asegúrate de que test_dataset tenga una propiedad .targets o ajusta conforme a tu dataset
+predictions = predictions_test[0]  # Ajusta según el output de tu modelo
+
+# Trazar las predicciones y los valores reales
+plt.figure(figsize=(10, 5))
+plt.plot(real_values[0], label='Valores Reales')
+plt.plot(predictions[0], label='Predicciones', linestyle='--')
+plt.title('Comparación de Valores Reales y Predicciones')
+plt.xlabel('Tiempo')
+plt.ylabel('Valor')
+plt.legend()
+plt.grid(True)
+
+# Mostrar el gráfico en Streamlit
+st.pyplot(plt)
