@@ -280,29 +280,46 @@ st.write(long_horizon_mse(test_dataset, predictions_test))
 
 
 
-# Supongamos que `test_dataset` puede proporcionarte los valores reales y que `predictions_test` contiene las predicciones.
-real_values = test_dataset.targets.numpy()  # Ajusta esto a cómo puedas obtener los valores reales.
-predictions = predictions_test.predictions  # Esto asume que la estructura incluye un campo 'predictions'.
+# Asumiendo que `real_values` y `predictions` son arrays que has extraído correctamente
+real_values = test_dataset.targets.numpy()  # Ajusta esto según cómo puedes obtener los valores reales
+predictions = predictions_test.predictions.squeeze()  # Ajusta según la estructura de tus predicciones
 
 # Crear DataFrame
-df_results = pd.DataFrame({
-    'Valores Reales': real_values.flatten(),  # Asegúrate de que las dimensiones coincidan.
-    'Predicciones': predictions.flatten()     # Puede necesitar ajustar .flatten() dependiendo de la forma de tus datos.
+results_df = pd.DataFrame({
+    "Real Values": real_values.flatten(),  # Usa flatten() si es necesario para coincidir las formas
+    "Predictions": predictions.flatten()
 })
 
-# Mostrar en Streamlit
-st.write("Comparación de Valores Reales y Predicciones", df_results)
+# Mostrar DataFrame en Streamlit
+st.dataframe(results_df)
 
 
 
 
 
-# window = 150
+# # Supongamos que `test_dataset` puede proporcionarte los valores reales y que `predictions_test` contiene las predicciones.
+# real_values = test_dataset.targets.numpy()  # Ajusta esto a cómo puedas obtener los valores reales.
+# predictions = predictions_test.predictions  # Esto asume que la estructura incluye un campo 'predictions'.
 
-# observed_df = pd.DataFrame(torch.cat([test_dataset[window]['past_values'], test_dataset[window]['future_values']]))
-# predictions_df = pd.DataFrame(predictions_test[0][0][window])
-# predictions_df.index += 512
-# st.write(predictions_df)
+# # Crear DataFrame
+# df_results = pd.DataFrame({
+#     'Valores Reales': real_values.flatten(),  # Asegúrate de que las dimensiones coincidan.
+#     'Predicciones': predictions.flatten()     # Puede necesitar ajustar .flatten() dependiendo de la forma de tus datos.
+# })
+
+# # Mostrar en Streamlit
+# st.write("Comparación de Valores Reales y Predicciones", df_results)
+
+
+
+
+
+# # window = 150
+
+# # observed_df = pd.DataFrame(torch.cat([test_dataset[window]['past_values'], test_dataset[window]['future_values']]))
+# # predictions_df = pd.DataFrame(predictions_test[0][0][window])
+# # predictions_df.index += 512
+# # st.write(predictions_df)
 
 
 
