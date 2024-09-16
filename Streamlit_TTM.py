@@ -402,7 +402,9 @@ fig, axes = plt.subplots(len(column_names), 1, figsize=(12, 6 * len(column_names
 
 for i, column_name in enumerate(column_names):
     real_values = observed_df[column_name].values  # Valores reales del i-ésimo canal
-    predicted_values = real_scale_predictions_df[column_name].values  # Predicciones desescaladas del i-ésimo canal
+    predicted_values = predictions_df.iloc[column_name].values  # Predicciones desescaladas del i-ésimo canal
+    #predicted_values = predictions_df.iloc[:, i].values  # Predicciones del i-ésimo canal
+
     time_index = range(len(real_values))
     pred_index = range(len(real_values), len(real_values) + len(predicted_values))
     
