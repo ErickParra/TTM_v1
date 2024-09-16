@@ -21,3 +21,4 @@ plotly
 IPython
 requests
 tsfm_public
+SQLAlchemy>=1.4.0
