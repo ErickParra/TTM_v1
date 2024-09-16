@@ -15,26 +15,73 @@ from datetime import datetime, timedelta
 from databricks import sql
 import numpy as np
 import matplotlib.pyplot as plt
+import streamlit as st
+from sqlalchemy import create_engine
+
 
 from tsfm_public.toolkit.time_series_preprocessor import TimeSeriesPreprocessor
-
 from tsfm_public import TinyTimeMixerForPrediction, TrackingCallback, count_parameters, load_dataset
-
 from tsfm_public.models.tinytimemixer import TinyTimeMixerForPrediction
 
 #from tsfm_public.toolkit.visualization import plot_predictions
+
+# # Acceder a los secrets almacenados en Streamlit Cloud
+# server = st.secrets["server"]
+# http = st.secrets["http"]
+# token = st.secrets["token"]
+
+# def get_data_from_databricks():
+#     connection = sql.connect(
+#         server_hostname=server,
+#         http_path=http,
+#         access_token=token
+#     )
+
+#     # Consulta para obtener el último tiempo registrado
+#     query_last_time = """
+#         SELECT MAX(Date_ReadTime) as last_time
+#         FROM hive_metastore.curated_cen_minecare_eastus2.oemdataprovider_oemparameterexternalview_hot
+#         WHERE EquipmentName = 'PA26'
+#     """
+#     last_time_df = pd.read_sql(query_last_time, connection)
+#     last_time = pd.to_datetime(last_time_df['last_time'].iloc[0])
+
+#     # Calcular las últimas 48 horas desde el último tiempo registrado
+#     time_48_hours_ago = last_time - timedelta(hours=55)
+
+#     # Formatear las fechas para SQL
+#     last_time_str = last_time.strftime('%Y-%m-%d %H:%M:%S')
+#     time_48_hours_ago_str = time_48_hours_ago.strftime('%Y-%m-%d %H:%M:%S')
+
+#     # Ejecutar consulta SQL para obtener los datos de las últimas 48 horas
+#     query = f"""
+#         SELECT * 
+#         FROM hive_metastore.curated_cen_minecare_eastus2.oemdataprovider_oemparameterexternalview_hot
+#         WHERE EquipmentName = 'PA26' 
+#         AND Date_ReadTime BETWEEN '{time_48_hours_ago_str}' AND '{last_time_str}'
+#     """
+#     df = pd.read_sql(query, connection)
+#     return df
+
+# df = get_data_from_databricks()
+# st.write("Datos Databricks:")
+# st.write(df)  # Esta línea mostrará el dataframe en la aplicación Streamlit
+
+
+
+
+
+
 
 # Acceder a los secrets almacenados en Streamlit Cloud
 server = st.secrets["server"]
 http = st.secrets["http"]
 token = st.secrets["token"]
 
+# Conexión a Databricks usando SQLAlchemy
 def get_data_from_databricks():
-    connection = sql.connect(
-        server_hostname=server,
-        http_path=http,
-        access_token=token
-    )
+    # Crear la conexión usando SQLAlchemy
+    engine = create_engine(f"databricks+pyhive://token:{token}@{server}/{http}")
 
     # Consulta para obtener el último tiempo registrado
     query_last_time = """
@@ -42,11 +89,13 @@ def get_data_from_databricks():
         FROM hive_metastore.curated_cen_minecare_eastus2.oemdataprovider_oemparameterexternalview_hot
         WHERE EquipmentName = 'PA26'
     """
-    last_time_df = pd.read_sql(query_last_time, connection)
+    
+    # Ejecutar consulta para obtener el último tiempo registrado
+    last_time_df = pd.read_sql(query_last_time, engine)
     last_time = pd.to_datetime(last_time_df['last_time'].iloc[0])
 
     # Calcular las últimas 48 horas desde el último tiempo registrado
-    time_48_hours_ago = last_time - timedelta(hours=55)
+    time_48_hours_ago = last_time - timedelta(hours=48)
 
     # Formatear las fechas para SQL
     last_time_str = last_time.strftime('%Y-%m-%d %H:%M:%S')
@@ -59,13 +108,32 @@ def get_data_from_databricks():
         WHERE EquipmentName = 'PA26' 
         AND Date_ReadTime BETWEEN '{time_48_hours_ago_str}' AND '{last_time_str}'
     """
-    df = pd.read_sql(query, connection)
+    
+    # Obtener los datos
+    df = pd.read_sql(query, engine)
+    
     return df
 
 df = get_data_from_databricks()
 
-st.write("Datos Databricks:")
-st.write(df)  # Esta línea mostrará el dataframe en la aplicación Streamlit
+st.write("Datos de Databricks:")
+st.write(df)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Remover columnas no necesarias
 df_filtered = df.drop(columns=[
