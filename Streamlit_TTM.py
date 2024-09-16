@@ -46,7 +46,7 @@ def get_data_from_databricks():
     last_time = pd.to_datetime(last_time_df['last_time'].iloc[0])
 
     # Calcular las últimas 48 horas desde el último tiempo registrado
-    time_48_hours_ago = last_time - timedelta(hours=60)
+    time_48_hours_ago = last_time - timedelta(hours=55)
 
     # Formatear las fechas para SQL
     last_time_str = last_time.strftime('%Y-%m-%d %H:%M:%S')
@@ -373,11 +373,10 @@ st.pyplot()
 
 
 
+import matplotlib.pyplot as plt
 
-
-
-# Nombres de las columnas
-column_names = [
+# Nombres de los sensores para los títulos de cada gráfico
+sensor_names = [
     "Coolant Temperature (Engine1) (PC5500)",
     "Engine 2 Coolant Temperature (PC5500)",
     "Engine 2 Intake Manifold 1 Air Temperature(High Resolution) (PC5500)",
@@ -397,25 +396,26 @@ column_names = [
     "Turbocharger 2 Boost Pressure (Cense-QSK38)"
 ]
 
+# Asumiendo que cada columna en 'observed_df' y 'predictions_df' representa un canal diferente
+num_columns = observed_df.shape[1]  # Número de columnas/canales
+
 # Crear una figura y un conjunto de subtramas
-fig, axes = plt.subplots(len(column_names), 1, figsize=(12, 6 * len(column_names)))  # Ajusta el tamaño de la figura según el número de canales
+fig, axes = plt.subplots(num_columns, 1, figsize=(12, 6 * num_columns))  # Ajusta el tamaño de la figura según el número de canales
 
-for i, column_name in enumerate(column_names):
-    real_values = observed_df[column_name].values  # Valores reales del i-ésimo canal
-    predicted_values = predictions_df.iloc[column_name].values  # Predicciones desescaladas del i-ésimo canal
-    #predicted_values = predictions_df.iloc[:, i].values  # Predicciones del i-ésimo canal
-
+for i in range(num_columns):
+    real_values = observed_df.iloc[:, i].values  # Valores reales del i-ésimo canal
+    predicted_values = predictions_df.iloc[:, i].values  # Predicciones del i-ésimo canal
     time_index = range(len(real_values))
     pred_index = range(len(real_values), len(real_values) + len(predicted_values))
     
-    if len(column_names) > 1:
+    if num_columns > 1:
         ax = axes[i]
     else:
         ax = axes
 
     ax.plot(time_index, real_values, label='Valores Reales', color='blue')
     ax.plot(pred_index, predicted_values, label='Predicciones', color='orange', linestyle='--')
-    ax.set_title(column_name)  # Usando el nombre de la columna como título
+    ax.set_title(sensor_names[i])  # Usar el nombre del sensor como título
     ax.set_xlabel('Índice de Tiempo')
     ax.set_ylabel('Valor')
     ax.legend()
@@ -423,6 +423,13 @@ for i, column_name in enumerate(column_names):
 
 plt.tight_layout()  # Ajustar el layout
 st.pyplot()
+
+
+
+
+
+
+
 
 
 
