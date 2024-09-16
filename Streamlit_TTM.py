@@ -370,6 +370,63 @@ st.pyplot()
 
 
 
+
+
+
+import matplotlib.pyplot as plt
+
+# Nombres de las columnas
+column_names = [
+    "Coolant Temperature (Engine1) (PC5500)",
+    "Engine 2 Coolant Temperature (PC5500)",
+    "Engine 2 Intake Manifold 1 Air Temperature(High Resolution) (PC5500)",
+    "Engine Coolant Pressure (Cense-QSK38)",
+    "Engine Coolant Temperature (Cense-QSK38)",
+    "Engine Fuel Rate (Cense-QSK38)",
+    "Engine Intake Manifold #1 Pressure - Parent (Cense-QSK38)",
+    "Engine Intake Manifold 1 Temperature (Cense-QSK38)",
+    "Engine Oil Pressure (Cense-QSK38)",
+    "Engine Percent Load At Current Speed (Cense-QSK38)",
+    "Engine Speed (Cense-QSK38)",
+    "Hydraulic Oil Temperature (PC5500)",
+    "Intake Manifold 2 Temperature - Parent (Cense-QSK38)",
+    "Intake Manifold 3 Temperature - Parent (Cense-QSK38)",
+    "Intake Manifold 4 Temperature - Parent (Cense-QSK38)",
+    "Turbocharger 1 Boost Pressure (Cense-QSK38)",
+    "Turbocharger 2 Boost Pressure (Cense-QSK38)"
+]
+
+# Crear una figura y un conjunto de subtramas
+fig, axes = plt.subplots(len(column_names), 1, figsize=(12, 6 * len(column_names)))  # Ajusta el tamaño de la figura según el número de canales
+
+for i, column_name in enumerate(column_names):
+    real_values = observed_df[column_name].values  # Valores reales del i-ésimo canal
+    predicted_values = real_scale_predictions_df[column_name].values  # Predicciones desescaladas del i-ésimo canal
+    time_index = range(len(real_values))
+    pred_index = range(len(real_values), len(real_values) + len(predicted_values))
+    
+    if len(column_names) > 1:
+        ax = axes[i]
+    else:
+        ax = axes
+
+    ax.plot(time_index, real_values, label='Valores Reales', color='blue')
+    ax.plot(pred_index, predicted_values, label='Predicciones', color='orange', linestyle='--')
+    ax.set_title(column_name)  # Usando el nombre de la columna como título
+    ax.set_xlabel('Índice de Tiempo')
+    ax.set_ylabel('Valor')
+    ax.legend()
+    ax.grid(True)
+
+plt.tight_layout()  # Ajustar el layout
+st.pyplot()
+
+
+
+
+
+
+
 # Entrena el preprocesador con los datos de entrenamiento
 TimeSeriesPreprocessor.train(train_dataset)
 
@@ -411,3 +468,5 @@ for i in range(num_columns):
 
 plt.tight_layout()  # Ajustar el layout
 st.pyplot()
+
+
