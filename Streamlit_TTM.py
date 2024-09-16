@@ -46,7 +46,7 @@ def get_data_from_databricks():
     last_time = pd.to_datetime(last_time_df['last_time'].iloc[0])
 
     # Calcular las últimas 48 horas desde el último tiempo registrado
-    time_48_hours_ago = last_time - timedelta(hours=59)
+    time_48_hours_ago = last_time - timedelta(hours=60)
 
     # Formatear las fechas para SQL
     last_time_str = last_time.strftime('%Y-%m-%d %H:%M:%S')
