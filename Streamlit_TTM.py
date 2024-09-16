@@ -228,9 +228,9 @@ st.pyplot()
 
 
 TTM_MODEL_REVISION = "1024_96_v1"
-TTM_MODEL_REVISION = "main"
+#TTM_MODEL_REVISION = "main"
 
-context_length = 512 #1024
+context_length = 1024 #512
 forecast_length = 96
 fewshot_fraction = 1
 
