@@ -14,6 +14,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 from databricks import sql
 import numpy as np
+import matplotlib.pyplot as plt
 
 from tsfm_public.toolkit.time_series_preprocessor import TimeSeriesPreprocessor
 
@@ -336,7 +337,7 @@ st.write("Predicciones:", predictions_df)
 
 
 
-import matplotlib.pyplot as plt
+
 
 # Suponiendo que cada columna en 'observed_df' y 'predictions_df' representa un canal diferente
 num_columns = observed_df.shape[1]  # Número de columnas/canales
@@ -373,7 +374,7 @@ st.pyplot()
 
 
 
-import matplotlib.pyplot as plt
+
 
 # Nombres de las columnas
 column_names = [
