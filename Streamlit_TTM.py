@@ -17,7 +17,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import streamlit as st
 from sqlalchemy import create_engine
-
+from sklearn.metrics import mean_squared_error as mse, mean_absolute_error as mae
 
 from tsfm_public.toolkit.time_series_preprocessor import TimeSeriesPreprocessor
 from tsfm_public import TinyTimeMixerForPrediction, TrackingCallback, count_parameters, load_dataset
@@ -227,10 +227,10 @@ st.pyplot()
 
 
 
-TTM_MODEL_REVISION = "1024_96_v1"
-#TTM_MODEL_REVISION = "main"
+#TTM_MODEL_REVISION = "1024_96_v1"
+TTM_MODEL_REVISION = "main"
 
-context_length = 1024 #512
+context_length = 512 #1024
 forecast_length = 96
 fewshot_fraction = 1
 
@@ -325,24 +325,24 @@ zeroshot_trainer = Trainer(
 import torch
 torch.cuda.empty_cache()
 predictions_test = zeroshot_trainer.predict(test_dataset)
-st.write("predictions_test:")
-st.write(predictions_test)
+#st.write("predictions_test:")
+#st.write(predictions_test)
 
 # torch.cuda.empty_cache()  # Libera memoria antes de la segunda predicción
 predictions_validation = zeroshot_trainer.predict(valid_dataset)
-st.write("predictions_validation:")
-st.write(predictions_validation)
+#st.write("predictions_validation:")
+#st.write(predictions_validation)
 
 predictions_test[0][0].shape
-st.write(predictions_test[0][0].shape)
+#st.write(predictions_test[0][0].shape)
 
 #Validation Loss Evaluation
 zeroshot_trainer.evaluate(valid_dataset)
-st.write("alidation Loss Evaluation:")
-st.write(zeroshot_trainer.evaluate(valid_dataset))
+#st.write("alidation Loss Evaluation:")
+#st.write(zeroshot_trainer.evaluate(valid_dataset))
 
 
-from sklearn.metrics import mean_squared_error as mse, mean_absolute_error as mae
+
 # let's make our own evaluation to convince ourselves that evaluate() works as expected:
 
 def long_horizon_mse(dataset, predictions):
