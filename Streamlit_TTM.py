@@ -336,44 +336,44 @@ st.write("Predicciones:", predictions_df)
 
 
 
+#### PLOT CON NOMBRES DE CANALES OK 
 
 
+# # Suponiendo que cada columna en 'observed_df' y 'predictions_df' representa un canal diferente
+# num_columns = observed_df.shape[1]  # Número de columnas/canales
 
-# Suponiendo que cada columna en 'observed_df' y 'predictions_df' representa un canal diferente
-num_columns = observed_df.shape[1]  # Número de columnas/canales
+# # Crear una figura y un conjunto de subtramas
+# fig, axes = plt.subplots(num_columns, 1, figsize=(12, 6 * num_columns))  # Ajusta el tamaño de la figura según el número de canales
 
-# Crear una figura y un conjunto de subtramas
-fig, axes = plt.subplots(num_columns, 1, figsize=(12, 6 * num_columns))  # Ajusta el tamaño de la figura según el número de canales
-
-for i in range(num_columns):
-    real_values = observed_df.iloc[:, i].values  # Valores reales del i-ésimo canal
-    predicted_values = predictions_df.iloc[:, i].values  # Predicciones del i-ésimo canal
-    time_index = range(len(real_values))
-    pred_index = range(len(real_values), len(real_values) + len(predicted_values))
+# for i in range(num_columns):
+#     real_values = observed_df.iloc[:, i].values  # Valores reales del i-ésimo canal
+#     predicted_values = predictions_df.iloc[:, i].values  # Predicciones del i-ésimo canal
+#     time_index = range(len(real_values))
+#     pred_index = range(len(real_values), len(real_values) + len(predicted_values))
     
-    if num_columns > 1:
-        ax = axes[i]
-    else:
-        ax = axes
+#     if num_columns > 1:
+#         ax = axes[i]
+#     else:
+#         ax = axes
 
-    ax.plot(time_index, real_values, label='Valores Reales', color='blue')
-    ax.plot(pred_index, predicted_values, label='Predicciones', color='orange', linestyle='--')
-    ax.set_title(f'Canal {i + 1}')
-    ax.set_xlabel('Índice de Tiempo')
-    ax.set_ylabel('Valor')
-    ax.legend()
-    ax.grid(True)
+#     ax.plot(time_index, real_values, label='Valores Reales', color='blue')
+#     ax.plot(pred_index, predicted_values, label='Predicciones', color='orange', linestyle='--')
+#     ax.set_title(f'Canal {i + 1}')
+#     ax.set_xlabel('Índice de Tiempo')
+#     ax.set_ylabel('Valor')
+#     ax.legend()
+#     ax.grid(True)
 
-plt.tight_layout()  # Ajustar el layout
-st.pyplot()
-
-
+# plt.tight_layout()  # Ajustar el layout
+# st.pyplot()
 
 
 
 
 
-import matplotlib.pyplot as plt
+
+
+
 
 # Nombres de los sensores para los títulos de cada gráfico
 sensor_names = [
@@ -437,46 +437,43 @@ st.pyplot()
 
 
 
-# Entrena el preprocesador con los datos de entrenamiento
-TimeSeriesPreprocessor.train(train_dataset)
+# # Entrena el preprocesador con los datos de entrenamiento
+# TimeSeriesPreprocessor.train(train_dataset)
 
-# Después de obtener predicciones escaladas del modelo
-# Aquí necesitarías transformar tus predicciones a un DataFrame si aún no lo están
-# Suponiendo que 'predictions_df' contiene las predicciones escaladas
-scaled_predictions_df = predictions_df
+# # Después de obtener predicciones escaladas del modelo
+# # Aquí necesitarías transformar tus predicciones a un DataFrame si aún no lo están
+# # Suponiendo que 'predictions_df' contiene las predicciones escaladas
+# scaled_predictions_df = predictions_df
 
-# Aplica la función de desescalamiento para convertir predicciones escaladas a su escala original
-real_scale_predictions_df = TimeSeriesPreprocessor.inverse_scale_targets(scaled_predictions_df)
+# # Aplica la función de desescalamiento para convertir predicciones escaladas a su escala original
+# real_scale_predictions_df = TimeSeriesPreprocessor.inverse_scale_targets(scaled_predictions_df)
 
 
-import matplotlib.pyplot as plt
 
-# Suponiendo que cada columna en 'observed_df' y 'real_scale_predictions_df' representa un canal diferente
-num_columns = observed_df.shape[1]  # Número de columnas/canales
+# # Suponiendo que cada columna en 'observed_df' y 'real_scale_predictions_df' representa un canal diferente
+# num_columns = observed_df.shape[1]  # Número de columnas/canales
 
-# Crear una figura y un conjunto de subtramas
-fig, axes = plt.subplots(num_columns, 1, figsize=(12, 6 * num_columns))  # Ajusta el tamaño de la figura según el número de canales
+# # Crear una figura y un conjunto de subtramas
+# fig, axes = plt.subplots(num_columns, 1, figsize=(12, 6 * num_columns))  # Ajusta el tamaño de la figura según el número de canales
 
-for i in range(num_columns):
-    real_values = observed_df.iloc[:, i].values  # Valores reales del i-ésimo canal
-    predicted_values = real_scale_predictions_df.iloc[:, i].values  # Predicciones desescaladas del i-ésimo canal
-    time_index = range(len(real_values))
-    pred_index = range(len(real_values), len(real_values) + len(predicted_values))
+# for i in range(num_columns):
+#     real_values = observed_df.iloc[:, i].values  # Valores reales del i-ésimo canal
+#     predicted_values = real_scale_predictions_df.iloc[:, i].values  # Predicciones desescaladas del i-ésimo canal
+#     time_index = range(len(real_values))
+#     pred_index = range(len(real_values), len(real_values) + len(predicted_values))
     
-    if num_columns > 1:
-        ax = axes[i]
-    else:
-        ax = axes
+#     if num_columns > 1:
+#         ax = axes[i]
+#     else:
+#         ax = axes
 
-    ax.plot(time_index, real_values, label='Valores Reales', color='blue')
-    ax.plot(pred_index, predicted_values, label='Predicciones Desescaladas', color='orange', linestyle='--')
-    ax.set_title(f'Canal {i + 1}')
-    ax.set_xlabel('Índice de Tiempo')
-    ax.set_ylabel('Valor')
-    ax.legend()
-    ax.grid(True)
+#     ax.plot(time_index, real_values, label='Valores Reales', color='blue')
+#     ax.plot(pred_index, predicted_values, label='Predicciones Desescaladas', color='orange', linestyle='--')
+#     ax.set_title(f'Canal {i + 1}')
+#     ax.set_xlabel('Índice de Tiempo')
+#     ax.set_ylabel('Valor')
+#     ax.legend()
+#     ax.grid(True)
 
-plt.tight_layout()  # Ajustar el layout
-st.pyplot()
-
-
+# plt.tight_layout()  # Ajustar el layout
+# st.pyplot()
