@@ -329,7 +329,7 @@ zeroshot_trainer.evaluate(valid_dataset)
 
 # let's make our own evaluation to convince ourselves that evaluate() works as expected:
 
-@st.cache(ttl=3600)  # Cache the results for one hour
+
 def long_horizon_mse(dataset, predictions):
 
     mses = []
