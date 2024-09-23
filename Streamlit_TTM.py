@@ -1,35 +1,14 @@
 import streamlit as st
 import pandas as pd
-#from transformers import TinyTimeMixerForPrediction
 from datetime import datetime, timedelta
 from databricks import sql
-import matplotlib.pyplot as plt
-from tsfm_public.toolkit.visualization import plot_predictions
-import requests
-import os
-from transformers import EarlyStoppingCallback, Trainer, TrainingArguments, set_seed
-
-import torch
-import pandas as pd
-from datetime import datetime, timedelta
-from databricks import sql
-import numpy as np
-import matplotlib.pyplot as plt
-import streamlit as st
-from sqlalchemy import create_engine
-from sklearn.metrics import mean_squared_error as mse, mean_absolute_error as mae
-
-from tsfm_public.toolkit.time_series_preprocessor import TimeSeriesPreprocessor
-from tsfm_public import TinyTimeMixerForPrediction, TrackingCallback, count_parameters, load_dataset
-from tsfm_public.models.tinytimemixer import TinyTimeMixerForPrediction
-
-#from tsfm_public.toolkit.visualization import plot_predictions
 
 # Acceder a los secrets almacenados en Streamlit Cloud
 server = st.secrets["server"]
 http = st.secrets["http"]
 token = st.secrets["token"]
 
+@st.cache(ttl=3600)  # Cache the results for one hour
 def get_data_from_databricks():
     connection = sql.connect(
         server_hostname=server,
@@ -47,7 +26,7 @@ def get_data_from_databricks():
     last_time = pd.to_datetime(last_time_df['last_time'].iloc[0])
 
     # Calcular las últimas 48 horas desde el último tiempo registrado
-    time_48_hours_ago = last_time - timedelta(hours=44)
+    time_48_hours_ago = last_time - timedelta(hours=48)
 
     # Formatear las fechas para SQL
     last_time_str = last_time.strftime('%Y-%m-%d %H:%M:%S')
@@ -59,17 +38,13 @@ def get_data_from_databricks():
         FROM hive_metastore.curated_cen_minecare_eastus2.oemdataprovider_oemparameterexternalview_hot
         WHERE EquipmentName = 'PA26' 
         AND Date_ReadTime BETWEEN '{time_48_hours_ago_str}' AND '{last_time_str}'
-     """
+    """
     df = pd.read_sql(query, connection)
     return df
 
 df = get_data_from_databricks()
 st.write("Datos Databricks:")
 st.write(df)  # Esta línea mostrará el dataframe en la aplicación Streamlit
-
-
-
-
 
 #### SQL ALCHEMY
 # # Acceder a los secrets almacenados en Streamlit Cloud
@@ -117,7 +92,6 @@ st.write(df)  # Esta línea mostrará el dataframe en la aplicación Streamlit
 
 # st.write("Datos de Databricks:")
 # st.write(df)
-
 
 
 
@@ -184,10 +158,8 @@ df_resampled = df_pivot.resample('1T').mean()
 df_resampled.interpolate(method='time', inplace=True)
 df_resampled.fillna(method='bfill', inplace=True)  # Rellenar valores faltantes hacia atrás
 
-
 st.write("Datos Resampleados e interpolados:")
 st.write(df_resampled)
-
 
 df_cleaned = df_resampled.drop(columns=[
         'Engine Oil Temperature (Engine2) (PC5500)', 'Remote Oil Tank Level (Pressure/Engine2) (PC5500)',
@@ -210,7 +182,6 @@ st.write(df_cleaned)
 
 st.write(df_cleaned.columns)
 
-
 # Suponiendo que df_cleaned es tu DataFrame y tiene múltiples columnas de series temporales
 fig, axes = plt.subplots(nrows=len(df_cleaned.columns), ncols=1, figsize=(10, 20), sharex=True)
 
@@ -223,7 +194,6 @@ for i, col in enumerate(df_cleaned.columns):
 # Ajusta automáticamente el layout de los plots
 plt.tight_layout()
 st.pyplot()
-
 
 
 
@@ -245,7 +215,6 @@ valid_fraction = 0.2
 test_fraction = 0.1
 
 
-
 # Calculando el número de filas para cada split
 train_rows = int(np.floor(train_fraction * total_rows))
 valid_rows = int(np.floor(valid_fraction * total_rows))
@@ -257,7 +226,6 @@ st.write("Valid:")
 st.write(valid_rows)
 st.write("Test:")
 st.write(test_rows)
-
 
 if 'ReadTime' not in df_cleaned.columns:
     df_cleaned.reset_index(inplace=True)
@@ -276,7 +244,6 @@ split_config = {
                     train_rows + valid_rows + test_rows,
                 ],
             }
-
 
 column_specifiers = {
     "timestamp_column": timestamp_column,
@@ -299,7 +266,6 @@ train_dataset, valid_dataset, test_dataset = tsp.get_datasets(
 )
 #print(f"Data lengths: train = {len(train_dataset)}, val = {len(valid_dataset)}, test = {len(test_dataset)}")
 
-
 st.write("Data lengths:")
 st.write(print(f"Data lengths: train = {len(train_dataset)}, val = {len(valid_dataset)}, test = {len(test_dataset)}"))
 
@@ -307,7 +273,6 @@ zeroshot_model = TinyTimeMixerForPrediction.from_pretrained("ibm/TTM", revision=
 
 st.write("zeroshot_model:")
 st.write(zeroshot_model)
-
 
 
 #temp_dir = tempfile.mkdtemp()
@@ -320,7 +285,6 @@ zeroshot_trainer = Trainer(
         eval_accumulation_steps=10,
     )
 )
-
 
 
 torch.cuda.empty_cache()
@@ -340,7 +304,6 @@ predictions_test[0][0].shape
 zeroshot_trainer.evaluate(valid_dataset)
 #st.write("alidation Loss Evaluation:")
 #st.write(zeroshot_trainer.evaluate(valid_dataset))
-
 
 
 # let's make our own evaluation to convince ourselves that evaluate() works as expected:
@@ -366,9 +329,7 @@ def long_horizon_mse(dataset, predictions):
 
     return data
 
-
 st.write(long_horizon_mse(valid_dataset, predictions_validation))
-
 
 zeroshot_trainer.evaluate(test_dataset)
 st.write("Test Loss Evaluation:")
@@ -379,11 +340,9 @@ st.write(long_horizon_mse(test_dataset, predictions_test))
 
 
 
-
 # Imprime el tipo y tal vez algunos elementos de test_dataset para entender su estructura
 st.write("Tipo de test_dataset:", type(test_dataset))
 st.write("Ejemplo de los primeros elementos de test_dataset:", test_dataset[0])
-
 
 
 
@@ -402,9 +361,7 @@ st.write("Predicciones:", predictions_df)
 
 
 
-
 #### PLOT CON NOMBRES DE CANALES OK 
-
 
 # # Suponiendo que cada columna en 'observed_df' y 'predictions_df' representa un canal diferente
 # num_columns = observed_df.shape[1]  # Número de columnas/canales
@@ -433,7 +390,6 @@ st.write("Predicciones:", predictions_df)
 
 # plt.tight_layout()  # Ajustar el layout
 # st.pyplot()
-
 
 
 
@@ -492,9 +448,7 @@ plt.tight_layout()  # Ajustar el layout
 st.pyplot()
 st.stop()
 
-
 st.stop()
-
 
 
 
@@ -517,7 +471,6 @@ st.stop()
 
 # # Aplica la función de desescalamiento para convertir predicciones escaladas a su escala original
 # real_scale_predictions_df = TimeSeriesPreprocessor.inverse_scale_targets(scaled_predictions_df)
-
 
 
 # # Suponiendo que cada columna en 'observed_df' y 'real_scale_predictions_df' representa un canal diferente
