@@ -9,7 +9,7 @@ import requests
 import os
 from transformers import EarlyStoppingCallback, Trainer, TrainingArguments, set_seed
 
-import streamlit as st
+import torch
 import pandas as pd
 from datetime import datetime, timedelta
 from databricks import sql
@@ -322,7 +322,7 @@ zeroshot_trainer = Trainer(
 )
 
 
-import torch
+
 torch.cuda.empty_cache()
 predictions_test = zeroshot_trainer.predict(test_dataset)
 #st.write("predictions_test:")
@@ -492,6 +492,8 @@ plt.tight_layout()  # Ajustar el layout
 st.pyplot()
 st.stop()
 
+
+st.stop()
 
 
 
