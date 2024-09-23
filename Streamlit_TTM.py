@@ -490,6 +490,7 @@ for i in range(num_columns):
 
 plt.tight_layout()  # Ajustar el layout
 st.pyplot()
+st.stop()
 
 
 
